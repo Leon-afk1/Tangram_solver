@@ -1,4 +1,3 @@
-from Shape import Shape
 import pygame
 import math
 import shapely
