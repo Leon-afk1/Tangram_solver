@@ -1,6 +1,8 @@
 from Shape import Shape
 import pygame
 import math
+import shapely
+
 pygame.init()
 
 # test 1
