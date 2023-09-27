@@ -3,6 +3,8 @@ import pygame
 import math
 pygame.init()
 
+#test 
+
 
 # Important: 
 # Les polygones sont scale up car sinon ils sont trop petits et ne s'affichent que sur 2 pixels
