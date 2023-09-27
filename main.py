@@ -2,7 +2,7 @@ from Shape import Shape
 import pygame
 import math
 pygame.init()
-
+#tests
 
 # Important: 
 # Les polygones sont scale up car sinon ils sont trop petits et ne s'affichent que sur 2 pixels
@@ -17,7 +17,6 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Tangram')
 screen.fill(background_colour)
 running = True
-
 
 # creation des objets, on peut ajouter autant de points qu'on veut
 triPoints = [[0,0],[2,0],[2,2]]
