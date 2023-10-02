@@ -13,14 +13,23 @@ polygons = [bigTriangle1,bigTriangle2,mediumTriangle,smallTriangle1,smallTriangl
 
 
 def solveTangram(shape,polys):
+    solved = False
     polygons = polys.copy()
+    solution = []
 
+    if shape.is_empty:
+        return solution
     for shapePoint in shape.exterior.coords:
-        selectedPolygon = selectPolygon(shape,shapePoint,polygons)
-        if(selectedPolygon == None):
-            return None
-        difference = shape.difference(selectedPolygon)
-        polygons.remove(selectedPolygon)
-        solveTangram(shape,polygons)
-
-
+        while polygons and not solved:
+            selectedPolygon = selectPolygon(shape,shapePoint,polygons)
+            if(selectedPolygon == None):
+                break
+            difference = shape.difference(selectedPolygon)
+            polygons.remove(selectedPolygon)
+            nextPolys = solveTangram(difference,polygons)
+            if(nextPolys != None):
+                solution += nextPolys
+                solved = True
+    if(not solution):
+        return None
+    return solution
