@@ -6,6 +6,7 @@ from functions import *
 
 pygame.init()
 
+# test 1
 
 # pour la fenetre (osef tier)
 background_colour = (255,255,255)
