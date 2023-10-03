@@ -1,8 +1,9 @@
 import pygame
 from pygame import gfxdraw
-import math
+from math import sqrt
 from shapely import *
 from functions import *
+from tangramSolver import *
 
 pygame.init()
 
@@ -10,17 +11,19 @@ pygame.init()
 
 # pour la fenetre (osef tier)
 background_colour = (255,255,255)
-(width, height) = (500, 500)
+(width, height) = (600, 600)
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Tangram')
 screen.fill(background_colour)
 running = True
  
-poly_1 = Polygon([(180, 200), (280, 160), (250, 70), (160, 190)])
-poly_2 = Polygon([(20, 200), (60, 260), (190, 210), (160, 130)])
-poly_3 = poly_1.intersection(poly_2)
-print(poly_1.intersection(poly_2))
-polygons = MultiPolygon([poly_1, poly_2, poly_3])
+squareShape = Polygon([(0, 0), (0, 400*sqrt(2)), (400*sqrt(2), 400*sqrt(2)), (400*sqrt(2), 0)])
+polygon1 = Polygon([(0.5, -0.866025), (1, 0), (0.5, 0.866025), (-0.5, 0.866025), (-1, 0), (-0.5, -0.866025)])
+polygon1 = transform(polygon1,lambda x:x*100+(100,100))
+polygon2 = Polygon([(1, -0.866025), (1.866025, 0), (1, 0.866025), (0.133975, 0)])
+polygon2 = transform(polygon2,lambda x:x*100+(100,100))
+difference = polygon2.difference(polygon1)
+polygons = MultiPolygon([squareShape, polygon1, polygon2,difference])
 
 i = 50
 
@@ -28,14 +31,19 @@ i = 50
 for poly in polygons.geoms:
     #   2 lignes pour ajouter de l'antialiasing, on fill le rectangle et on rajoute les lignes exteieures antialiasé avec la deuxieme ligne
     #   ça existe pas avec pygame un polygone filled antialiased :(
-
     pygame.gfxdraw.filled_polygon(screen, poly.exterior.coords,(i,0,0))
     pygame.gfxdraw.aapolygon(screen, poly.exterior.coords,(i,0,0))
-    i =i+100
+    
+    i =i+50
+
+
+solveTangram(squareShape,tangramPieces,screen)
+
+
 
 #afficher les points du polygone avec pygame
 
-print(fullyIn(poly_3,poly_1))
+
 
 while running:
     for event in pygame.event.get():
