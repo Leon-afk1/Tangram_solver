@@ -2,7 +2,6 @@ import pygame
 from pygame import gfxdraw
 from math import sqrt
 from shapely import *
-from functions import *
 from tangramSolver import *
 
 pygame.init()

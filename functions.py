@@ -5,10 +5,9 @@ from shapely import *
 def fullyIn(polygon,shape):
     #   rouding security
     EPSILON = 0.005
-    intersection = shape.intersection(polygon)
+    intersection = shape.intersection(polygon.polygon)
 
-    if(abs(intersection.area - polygon.area) <= EPSILON):
-        print(polygon)
+    if(abs(intersection.area - polygon.polygon.area) <= EPSILON):
         return True
     else:
         return False
@@ -26,5 +25,5 @@ def selectPolygon(shape,point,polygons):
 #checks if a polygon is in the shape by moving it on the point
 def polygonIn(shape,point,polygon):
 
-    polygon = transform(polygon,lambda x: x + point)
+    polygon.polygon = transform(polygon.polygon,lambda x: x + point)
     return fullyIn(polygon,shape)
