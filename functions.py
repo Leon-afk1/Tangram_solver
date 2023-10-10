@@ -1,3 +1,4 @@
+import Piece
 from shapely import *
 import shapely
 #test push
@@ -7,7 +8,6 @@ def fullyIn(polygon,shape):
     #   rouding security
     EPSILON = 0.005
     poly = Polygon(polygon.getPoly())
-    print(shape)
     if type(shape.intersection(poly)) == shapely.geometry.polygon.Polygon and not shape.intersection(poly).is_empty:
         intersection = shape.intersection(poly)
         if(abs(intersection.area - poly.area) <= EPSILON):
@@ -24,7 +24,6 @@ def selectPolygon(shape,point,polygons):
     #todo
     i = 0
     for polygon in polygons:
-        print(i)
         i +=1
         if(polygonIn(shape,point,polygon)):
             return polygon
