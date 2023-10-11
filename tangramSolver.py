@@ -19,17 +19,14 @@ tangramPieces = [bigTriangle1,bigTriangle2,mediumTriangle,smallTriangle1,smallTr
 def solveTangram(shape,polys,screen):
     solved = False
     solution = []
-    print("Entré dans la fonction solveTangram")
     if shape.is_empty:
         return solution
     for shapePoint in shape.exterior.coords:
         polygons = polys.copy()
-        print(shapePoint)
         while polygons and not solved:
             selectedPolygon = selectPolygon(shape,shapePoint,polygons)
             
             if(selectedPolygon == None):
-                print("no polygon selected")
                 break
 
             polygons.remove(selectedPolygon)
@@ -41,12 +38,11 @@ def solveTangram(shape,polys,screen):
             
             
             ####
-            print("selectedPolygon: ",selectedPolygon.getPoly())
             difference = shape.difference(selectedPolygon.getPoly())
+            print(difference)
             pygame.gfxdraw.filled_polygon(screen, difference.exterior.coords,(0,0,150))
             pygame.gfxdraw.aapolygon(screen, difference.exterior.coords,(0,0,150))
             pygame.display.update()
-            sleep(0.5)
             nextPolys = solveTangram(difference,polygons,screen)
             if(nextPolys != None):
                 solution += nextPolys

@@ -7,7 +7,6 @@ def fullyIn(polygon,shape):
     #   rouding security
     EPSILON = 0.005
     poly = Polygon(polygon.getPoly())
-    print(shape)
     if type(shape.intersection(poly)) == shapely.geometry.polygon.Polygon and not shape.intersection(poly).is_empty:
         intersection = shape.intersection(poly)
         if(abs(intersection.area - poly.area) <= EPSILON):

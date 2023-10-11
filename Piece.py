@@ -25,3 +25,4 @@ class Piece():
             cx,cy = coords[i]
             coords[i] = (cx + (x - self.coord.x), cy + (y - self.coord.y))
         self.poly = Polygon(coords)
+        self.coord = Point(point)
