@@ -39,7 +39,6 @@ def solveTangram(shape,polys,screen):
             
             ####
             difference = shape.difference(selectedPolygon.getPoly())
-            print(difference)
             pygame.gfxdraw.filled_polygon(screen, difference.exterior.coords,(0,0,150))
             pygame.gfxdraw.aapolygon(screen, difference.exterior.coords,(0,0,150))
             pygame.display.update()
