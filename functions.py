@@ -1,3 +1,4 @@
+import Piece
 from shapely import *
 import shapely
 #test push

@@ -42,6 +42,7 @@ def solveTangram(shape,polys,screen):
             pygame.gfxdraw.filled_polygon(screen, difference.exterior.coords,(0,0,150))
             pygame.gfxdraw.aapolygon(screen, difference.exterior.coords,(0,0,150))
             pygame.display.update()
+            sleep(0.1)
             nextPolys = solveTangram(difference,polygons,screen)
             if(nextPolys != None):
                 solution += nextPolys
