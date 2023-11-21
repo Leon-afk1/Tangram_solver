@@ -3,8 +3,8 @@ import pygame
 from Piece import Piece
 from EventManager import EventManager
 from DisplayManager import DisplayManager
+from ShapeGestion import ShapeGestion
 
-# pour la fenetre (osef tier)
 
 (width, height) = (600, 600)
 screen = pygame.display.set_mode((width, height))
@@ -19,6 +19,8 @@ p1 = Piece(shape,(255,0,0))
 
 pieces = [p1,bigTriangle1,bigTriangle2]
 
+ShapeGestion.saveFile("res/data.json",p1.poly)
+ShapeGestion.importFile("res/data.json")
 eventManager = EventManager(pieces)
 displayManager = DisplayManager(pieces)
 
