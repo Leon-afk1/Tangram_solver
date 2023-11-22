@@ -1,6 +1,7 @@
 from shapely import *
 import pygame
 from pygame import gfxdraw
+import math
 
 class Piece():
     def __init__(self,_polygon,_color,_coord=Point((0,0))):
@@ -60,3 +61,13 @@ class Piece():
         for piece in pieces:
             if(self.poly.intersects(piece.poly)):
                 return True
+    
+
+    def Rotate(self, angle):
+        self.poly = Polygon(RotatePoint(point,angle) for point in self.poly.exterior.coords)
+
+
+# je sais pas ou mettre cette fonction pour que y'ai que la class piece.py dans ce fichier
+def RotatePoint(point, angle):
+    rad_angle = math.radians(angle)
+    return(Point(point[0] * math.cos(rad_angle) - point[1] * math.sin(rad_angle), point[0] * math.sin(rad_angle) - point[1] * math.cos(rad_angle)))
