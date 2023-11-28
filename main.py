@@ -6,7 +6,7 @@ from tangramSolver import *
 
 pygame.init()
 
-# test 1
+# test 2
 
 # pour la fenetre (osef tier)
 background_colour = (255,255,255)
