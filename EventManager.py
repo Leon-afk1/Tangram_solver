@@ -17,8 +17,24 @@ class EventManager():
                     self.OnMouseDown()
                 case pygame.MOUSEBUTTONUP:
                     self.OnMouseUp()
+                case pygame.KEYDOWN:
+                    self.OnKeyDown(event.key)
+        
         if(self.pieceHeld != None):
             self.OnGrab()
+            
+
+    def OnKeyDown(self, key):
+        if key == pygame.K_LEFT:
+            self.RotatePiece(-5.0)  # Rotation vers la gauche (angle négatif)
+        elif key == pygame.K_RIGHT:
+            self.RotatePiece(5.0)   # Rotation vers la droite (angle positif)
+
+    def RotatePiece(self, angle):
+        otherPieces = self.pieces.copy()
+        otherPieces.remove(self.pieceHeld)
+        if self.pieceHeld:
+            self.pieceHeld.rotate(angle,otherPieces)
 
     def OnMouseDown(self):
         mousePos = pygame.mouse.get_pos()
