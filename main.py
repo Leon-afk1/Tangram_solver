@@ -15,7 +15,7 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Tangram')
 screen.fill(background_colour)
 running = True
- 
+bigTriangle1 = Polygon([(0,0),(400,0),(0,400)])
 squareShape = Polygon([(0, 0), (0, 400*sqrt(2)), (400*sqrt(2), 400*sqrt(2)), (400*sqrt(2), 0)])
 polygon1 = Polygon([(0.5, -0.866025), (1, 0), (0.5, 0.866025), (-0.5, 0.866025), (-1, 0), (-0.5, -0.866025)])
 polygon1 = transform(polygon1,lambda x:x*100+(100,100))
@@ -36,8 +36,8 @@ for poly in polygons.geoms:
     i =i+50
 
 
-solveTangram(squareShape,tangramPieces,screen)
-
+solution = solveTangram(bigTriangle1,tangramPieces,screen)
+print(solution)
 
 
 #afficher les points du polygone avec pygame

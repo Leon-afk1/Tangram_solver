@@ -39,12 +39,16 @@ def solveTangram(shape,polys,screen):
             
             ####
             difference = shape.difference(selectedPolygon.getPoly())
-            pygame.gfxdraw.filled_polygon(screen, difference.exterior.coords,(0,0,150))
-            pygame.gfxdraw.aapolygon(screen, difference.exterior.coords,(0,0,150))
-            pygame.display.update()
-            sleep(0.1)
+            print(difference)
+            if not difference.is_empty:
+                pygame.gfxdraw.filled_polygon(screen, difference.exterior.coords,(0,0,150))
+                pygame.gfxdraw.aapolygon(screen, difference.exterior.coords,(0,0,150))
+                pygame.display.update()
+                sleep(0.1)
             nextPolys = solveTangram(difference,polygons,screen)
+            print(nextPolys)
             if(nextPolys != None):
+                solution.append(selectedPolygon.getPoly())
                 solution += nextPolys
                 solved = True
     if(not solution):
