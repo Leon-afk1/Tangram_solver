@@ -31,10 +31,11 @@ class EventManager():
             self.RotatePiece(5.0)   # Rotation vers la droite (angle positif)
 
     def RotatePiece(self, angle):
-        otherPieces = self.pieces.copy()
-        otherPieces.remove(self.pieceHeld)
-        if self.pieceHeld:
-            self.pieceHeld.rotate(angle,otherPieces)
+        if self.pieceHeld != None:
+            otherPieces = self.pieces.copy()
+            otherPieces.remove(self.pieceHeld)
+            if self.pieceHeld:
+                self.pieceHeld.rotate(angle,otherPieces)
 
     def OnMouseDown(self):
         mousePos = pygame.mouse.get_pos()
