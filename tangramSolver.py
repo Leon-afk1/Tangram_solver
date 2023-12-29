@@ -17,6 +17,30 @@ tangramPieces = [bigTriangle1,bigTriangle2,mediumTriangle,smallTriangle1,smallTr
 
 
 def solveTangram(shape,polys,screen):
+    solution = []
+    if shape.geom_type == "MultiPolygon":
+        solution = solveMultipolygon(shape,polys,screen)
+    else:
+        solution = solvePolygon(shape,polys,screen)
+    return solution
+
+
+def solveMultipolygon(multi_shapes,polys,screen):
+    solution = []
+    polygons = polys.copy()
+    shapes = list(multi_shapes.geoms)
+    for shape in shapes:
+        local_solution = solvePolygon(shape,polygons,screen)
+        # S'il n'existe pas de solution pour le multipolygon alors rien ne sert de résoudre le reste des polygones
+        if local_solution == None:
+            return None
+        solution.extend(local_solution)
+        for sol in local_solution:
+            polygons.remove(sol)
+    return solution
+    
+
+def solvePolygon(shape,polys,screen):
     solved = False
     solution = []
     if shape.is_empty:
@@ -35,22 +59,20 @@ def solveTangram(shape,polys,screen):
             ####
             screen.fill((255,255,255))
             selectedPolygon.display(screen)
-            
-            
             ####
+
             difference = shape.difference(selectedPolygon.getPoly())
-            print(difference)
-            if not difference.is_empty:
+            if not difference.is_empty and difference.geom_type != "MultiPolygon":
                 pygame.gfxdraw.filled_polygon(screen, difference.exterior.coords,(0,0,150))
                 pygame.gfxdraw.aapolygon(screen, difference.exterior.coords,(0,0,150))
                 pygame.display.update()
-                sleep(0.1)
+                #sleep(0.1)
             nextPolys = solveTangram(difference,polygons,screen)
-            print(nextPolys)
             if(nextPolys != None):
-                solution.append(selectedPolygon.getPoly())
+                solution.append(selectedPolygon)
                 solution += nextPolys
                 solved = True
     if(not solution):
         return None
     return solution
+    
