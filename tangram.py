@@ -18,15 +18,17 @@ class TangramGame:
         self.screen.fill(self.background_colour)
         self.running = True
 
-        bigTriangle1 = Polygon([(0, 0), (400, 0), (0, 400)])
-        mediumTriangleTest = Polygon([(400,400),(600,400),(400,600)])
-
-        self.squareShape = Polygon([(0, 0), (0, 400 * sqrt(2)), (400 * sqrt(2), 400 * sqrt(2)), (400 * sqrt(2), 0)])
+        # Créez les pièces du Tangram
+        bigTriangle1 = Polygon([(50, 50), (150, 50), (50, 150)])
+        bigTriangle2 = Polygon([(150, 50), (250, 50), (150, 150)])
+        mediumTriangle = Polygon([(250, 50), (320.71, 50), (250, 120.71)])
+        smallTriangle1 = Polygon([(50, 150), (100, 150), (50, 200)])
+        smallTriangle2 = Polygon([(150, 150), (200, 150), (150, 200)])
+        square = Polygon([(250, 150), (300, 150), (300, 200), (250, 200)])
+        trapeze = Polygon([(150, 250), (200, 200), (200, 250), (150, 300)])
         
-        shapeGestion = ShapeGestion()
-        shapeGestion.importFile('res/shape.json')
-        
-        self.testShape = MultiPolygon([bigTriangle1,mediumTriangleTest])
+        self.testShape = MultiPolygon([bigTriangle1, bigTriangle2, mediumTriangle, smallTriangle1, smallTriangle2, square, trapeze])
+        # self.testShape = MultiPolygon([bigTriangle1, bigTriangle2, mediumTriangle, smallTriangle1, smallTriangle2, square])
 
         self.i = 50
 
