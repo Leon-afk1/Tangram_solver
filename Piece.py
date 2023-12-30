@@ -74,7 +74,11 @@ class Piece():
     
 
     def Rotate(self, angle):
-        self.poly = Polygon(RotatePoint(point,angle) for point in self.poly.exterior.coords)
+        self.rotation_angle += angle
+        self.poly = rotate(self.poly, self.rotation_angle, origin=self.coord)
+
+        #self.poly = Polygon(RotatePoint(point,angle) for point in self.poly.exterior.coords)
+
 
 
 # je sais pas ou mettre cette fonction pour que y'ai que la class piece.py dans ce fichier
