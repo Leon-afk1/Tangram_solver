@@ -3,6 +3,7 @@ from pygame import gfxdraw
 from math import sqrt
 from shapely import *
 from tangramSolver import *
+from ShapeGestion import *
 
 class TangramGame:
     def __init__(self, width, height):
@@ -21,6 +22,10 @@ class TangramGame:
         mediumTriangleTest = Polygon([(400,400),(600,400),(400,600)])
 
         self.squareShape = Polygon([(0, 0), (0, 400 * sqrt(2)), (400 * sqrt(2), 400 * sqrt(2)), (400 * sqrt(2), 0)])
+        
+        shapeGestion = ShapeGestion()
+        shapeGestion.importFile('res/shape.json')
+        
         self.testShape = MultiPolygon([bigTriangle1,mediumTriangleTest])
 
         self.i = 50

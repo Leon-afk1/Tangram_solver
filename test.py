@@ -42,11 +42,9 @@ class TangramConstructor():
         self.pieces = tangramPieces
 
     def run(self):
-        window_width, window_height = self.screen.get_size()
-
-        ShapeGestion.saveFile("res/data.json", self.pieces[0].poly)
-        ShapeGestion.importFile("res/data.json")
-
+        
+        self.pieces=ShapeGestion.importFile("res/data.json")
+        
         eventManager = EventManager(self.pieces)
         displayManager = DisplayManager(self.pieces)
 
@@ -54,5 +52,4 @@ class TangramConstructor():
             eventManager.Event()
             displayManager.Update(self.screen)
             
-        shapeGestion = ShapeGestion()
-        shapeGestion.saveShapeFile('res/shape.json', self.pieces)
+        ShapeGestion.saveFile("res/data.json", self.pieces)
