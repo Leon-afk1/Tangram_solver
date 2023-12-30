@@ -2,10 +2,12 @@ import pygame
 from shapely import *
 
 class EventManager():
-    def __init__(self,_pieces):
+    def __init__(self,_pieces,_width,_height):
         self.pieces = _pieces
         self.running = True
         self.pieceHeld = None
+        self.width = _width
+        self.height = _height
 
     def Event(self):
         for event in pygame.event.get():
@@ -35,7 +37,7 @@ class EventManager():
             otherPieces = self.pieces.copy()
             otherPieces.remove(self.pieceHeld)
             if self.pieceHeld:
-                self.pieceHeld.rotate(angle,otherPieces)
+                self.pieceHeld.Rotate(angle)
 
     def OnMouseDown(self):
         mousePos = pygame.mouse.get_pos()

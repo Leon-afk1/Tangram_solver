@@ -24,6 +24,7 @@ def selectPolygon(shape,point,polygons):
     #todo
     i = 0
     for polygon in polygons:
+        print(i)
         i +=1
         if(polygonIn(shape,point,polygon)):
             return polygon

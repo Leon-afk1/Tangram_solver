@@ -12,22 +12,44 @@ class TangramConstructor():
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption('Tangram')
 
-        shape = Polygon([(0, 565.685424949238), (565.685424949238, 565.685424949238), (565.685424949238, 0), (400, 0), (0, 400), (0, 565.685424949238)])
-        bigTriangle1 = Piece(Polygon([(0, 0), (400, 0), (0, 400)]), (0, 255, 154))
-        bigTriangle2 = Piece(Polygon([(0, 0), (400, 0), (0, 400)]), (255, 154, 0))
+        reduction_factor = 1
 
-        p1 = Piece(shape, (255, 0, 0))
+        # Créez les pièces du Tangram
+        bigTriangle1 = Piece(Polygon([(0, 0), (100, 0), (0, 100)]), (0, 255, 154))
+        bigTriangle2 = Piece(Polygon([(0, 0), (100, 0), (0, 100)]), (255, 154, 0))
+        mediumTriangle = Piece(Polygon([(0, 0), (70.71, 0), (0, 70.71)]), (255, 0, 0))
+        smallTriangle1 = Piece(Polygon([(0, 0), (50, 0), (0, 50)]), (189, 126, 0))
+        smallTriangle2 = Piece(Polygon([(0, 0), (50, 0), (0, 50)]), (189, 0, 145))
+        square = Piece(Polygon([(0, 0), (50, 0), (50, 50), (0, 50)]), (247, 255, 0))
+        trapeze = Piece(Polygon([(0, 0), (50, -50), (50, 0), (0, 50)]), (0, 0, 204))
 
-        self.pieces = [p1, bigTriangle1, bigTriangle2]
+        # Déplacer les pièces à des positions spécifiques
+        bigTriangle1.moveToPoint((50, 50))
+        bigTriangle2.moveToPoint((150, 50))
+        mediumTriangle.moveToPoint((250, 50))
+        smallTriangle1.moveToPoint((50, 150))
+        smallTriangle2.moveToPoint((150, 150))
+        square.moveToPoint((250, 150))
+        trapeze.moveToPoint((150, 250))
+
+        tangramPieces = [bigTriangle1, bigTriangle2, mediumTriangle, smallTriangle1, smallTriangle2, square, trapeze]
+
+        # Ajustez la taille de chaque pièce
+        for piece in tangramPieces:
+            piece.scale(reduction_factor)
+
+
+        self.pieces = tangramPieces
 
     def run(self):
+        window_width, window_height = self.screen.get_size()
+
         ShapeGestion.saveFile("res/data.json", self.pieces[0].poly)
         ShapeGestion.importFile("res/data.json")
-        
-        eventManager = EventManager(self.pieces)
+
+        eventManager = EventManager(self.pieces, window_width, window_height)
         displayManager = DisplayManager(self.pieces)
 
         while eventManager.running:
             eventManager.Event()
             displayManager.Update(self.screen)
-    

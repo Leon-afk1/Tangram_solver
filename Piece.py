@@ -3,6 +3,7 @@ import pygame
 from pygame import gfxdraw
 import math
 from shapely.affinity import rotate
+import random
 
 class Piece():
     def __init__(self,_polygon,_color, _coord=Point((0,0))):
@@ -37,8 +38,6 @@ class Piece():
         if self.CollisionCheck(pieces):
             self.rotation_angle -= angle
 
-        
-
     def setOffset(self, mousePos):
         x, y = mousePos
         x -= self.coord.x
@@ -72,13 +71,17 @@ class Piece():
             if buffered_poly.intersects(piece.poly):
                 return True
     
-
     def Rotate(self, angle):
-        self.poly = Polygon(RotatePoint(point,angle) for point in self.poly.exterior.coords)
+        self.poly = rotate(self.poly, angle, origin=self.coord)
 
+    def scale(self, factor):
+        self.poly = Polygon([(x * factor, y * factor) for x, y in self.poly.exterior.coords])
 
-# je sais pas ou mettre cette fonction pour que y'ai que la class piece.py dans ce fichier
-def RotatePoint(point, angle):
-    rad_angle = math.radians(angle)
-    return(Point(point[0] * math.cos(rad_angle) - point[1] * math.sin(rad_angle), point[0] * math.sin(rad_angle) - point[1] * math.cos(rad_angle)))
-    
+    def RotatePiece(self, angle):
+        if self.pieceHeld != None:
+            print(f"Rotating piece by {angle} degrees")
+            self.pieceHeld.Rotate(angle)
+
+# def RotatePoint(point, angle):
+#     rad_angle = math.radians(angle)
+#     return(Point(point[0] * math.cos(rad_angle) - point[1] * math.sin(rad_angle), point[0] * math.sin(rad_angle) - point[1] * math.cos(rad_angle)))
