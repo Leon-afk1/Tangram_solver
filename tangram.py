@@ -17,16 +17,15 @@ class TangramGame:
         self.screen.fill(self.background_colour)
         self.running = True
 
-        self.bigTriangle1 = Polygon([(0, 0), (200, 0), (0, 200)])
-        squareShape = Polygon([(0, 0), (0, 200 * sqrt(2)), (200 * sqrt(2), 200 * sqrt(2)), (200 * sqrt(2), 0)])
+        self.squareShape = Polygon([(0, 0), (0, 400*sqrt(2)), (400*sqrt(2), 400*sqrt(2)), (400*sqrt(2), 0)])
         polygon1 = Polygon([(0.5, -0.866025), (1, 0), (0.5, 0.866025), (-0.5, 0.866025), (-1, 0), (-0.5, -0.866025)])
-        polygon1 = transform(polygon1, lambda x: x * 50 + (50, 50))
+        polygon1 = transform(polygon1,lambda x:x*100+(100,100))
         polygon2 = Polygon([(1, -0.866025), (1.866025, 0), (1, 0.866025), (0.133975, 0)])
-        polygon2 = transform(polygon2, lambda x: x * 50 + (50, 50))
+        polygon2 = transform(polygon2,lambda x:x*100+(100,100))
         difference = polygon2.difference(polygon1)
-        self.polygons = MultiPolygon([squareShape, polygon1, polygon2, difference])
+        self.polygons = MultiPolygon([self.squareShape, polygon1, polygon2,difference])
 
-        self.i = 25
+        self.i = 50
 
 
     def run(self):
@@ -38,7 +37,7 @@ class TangramGame:
 
             self.i += 50
 
-        solution = solveTangram(self.bigTriangle1, tangramPieces, self.screen)
+        solution = solveTangram(self.squareShape, tangramPieces, self.screen)
         print(solution)
 
         while self.running:
