@@ -47,9 +47,12 @@ class TangramConstructor():
         ShapeGestion.saveFile("res/data.json", self.pieces[0].poly)
         ShapeGestion.importFile("res/data.json")
 
-        eventManager = EventManager(self.pieces, window_width, window_height)
+        eventManager = EventManager(self.pieces)
         displayManager = DisplayManager(self.pieces)
 
         while eventManager.running:
             eventManager.Event()
             displayManager.Update(self.screen)
+            
+        shapeGestion = ShapeGestion()
+        shapeGestion.saveShapeFile('res/shape.json', self.pieces)
