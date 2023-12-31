@@ -2,12 +2,10 @@ import pygame
 from shapely import *
 
 class EventManager():
-    def __init__(self,_pieces,_width,_height):
+    def __init__(self,_pieces):
         self.pieces = _pieces
         self.running = True
         self.pieceHeld = None
-        self.width = _width
-        self.height = _height
 
     def Event(self):
         for event in pygame.event.get():

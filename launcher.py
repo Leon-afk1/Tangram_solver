@@ -94,4 +94,3 @@ class launcher:
 
 
 pygame.quit()
-

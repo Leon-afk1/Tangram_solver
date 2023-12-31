@@ -4,16 +4,23 @@ from pygame import gfxdraw
 from time import sleep
 from Piece import Piece
 
-bigTriangle1 = Piece(Polygon([(0,0),(400,0),(0,400)]),(0,255,154))
-bigTriangle2 = Piece(Polygon([(0,0),(400,0),(0,400)]),(255,154,0))
-mediumTriangle = Piece(Polygon([(0,0),(200,0),(0,200)]),(255,0,0))
-smallTriangle1 = Piece(Polygon([(0,0),(100,0),(0,100)]),(189,126,0))
-smallTriangle2 = Piece(Polygon([(0,0),(100,0),(0,100)]),(189,0,145))
-square = Piece(Polygon([(0,0),(100,0),(100,100),(0,100)]),(247,255,0))
-trapeze = Piece(Polygon([(0,0),(100,-100),(100,0),(0,100)]),(0,0,204))
-trapezeInversed = Piece(Polygon([(0,0),(100,0),(0,100),(-100,100)]),(0,0,204))
+reduction_factor = 1
+
+# Créez les pièces du Tangram
+bigTriangle1 = Piece(Polygon([(0, 0), (100, 0), (0, 100)]), (0, 255, 154))
+bigTriangle2 = Piece(Polygon([(0, 0), (100, 0), (0, 100)]), (255, 154, 0))
+mediumTriangle = Piece(Polygon([(0, 0), (70.71, 0), (0, 70.71)]), (255, 0, 0))
+smallTriangle1 = Piece(Polygon([(0, 0), (50, 0), (0, 50)]), (189, 126, 0))
+smallTriangle2 = Piece(Polygon([(0, 0), (50, 0), (0, 50)]), (189, 0, 145))
+square = Piece(Polygon([(0, 0), (50, 0), (50, 50), (0, 50)]), (247, 255, 0))
+trapeze = Piece(Polygon([(0, 0), (50, -50), (50, 0), (0, 50)]), (0, 0, 204))
+trapezeInversed = Piece(Polygon([(0, 0), (50, 50), (50, 0), (0, -50)]), (0, 0, 204))
 
 tangramPieces = [bigTriangle1,bigTriangle2,mediumTriangle,smallTriangle1,smallTriangle2,square,trapeze,trapezeInversed]
+
+# Ajustez la taille de chaque pièce
+for piece in tangramPieces:
+    piece.scale(reduction_factor)
 
 
 def solveTangram(shape,polys,screen):
