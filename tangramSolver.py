@@ -6,14 +6,14 @@ from Piece import Piece
 
 ROTATION_GAP = 90
 
-bigTriangle1 = Piece(Polygon([(0,0),(400,0),(0,400)]),(0,255,154))
-bigTriangle2 = Piece(Polygon([(0,0),(400,0),(0,400)]),(255,154,0))
-mediumTriangle = Piece(Polygon([(0,0),(200,0),(0,200)]),(255,0,0))
-smallTriangle1 = Piece(Polygon([(0,0),(100,0),(0,100)]),(189,126,0))
-smallTriangle2 = Piece(Polygon([(0,0),(100,0),(0,100)]),(189,0,145))
-square = Piece(Polygon([(0,0),(100,0),(100,100),(0,100)]),(247,255,0))
-trapeze = Piece(Polygon([(0,0),(100,-100),(100,0),(0,100)]),(0,0,204))
-trapezeInversed = Piece(Polygon([(0,0),(100,0),(0,100),(-100,100)]),(0,0,204))
+bigTriangle1 = Piece(Polygon([(0,0),(400,0),(0,400)]), 0, (0,255,154))
+bigTriangle2 = Piece(Polygon([(0,0),(400,0),(0,400)]), 1, (255,154,0))
+mediumTriangle = Piece(Polygon([(0,0),(200,0),(0,200)]), 2, (255,0,0))
+smallTriangle1 = Piece(Polygon([(0,0),(100,0),(0,100)]), 3, (189,126,0))
+smallTriangle2 = Piece(Polygon([(0,0),(100,0),(0,100)]), 4, (189,0,145))
+square = Piece(Polygon([(0,0),(100,0),(100,100),(0,100)]), 5, (247,255,0))
+trapeze = Piece(Polygon([(0,0),(100,-100),(100,0),(0,100)]), 6, (0,0,204))
+trapezeInversed = Piece(Polygon([(0,0),(100,0),(0,100),(-100,100)]), 6, (0,0,204))
 
 tangramPieces = [bigTriangle1,bigTriangle2,mediumTriangle,smallTriangle1,smallTriangle2,square,trapeze,trapezeInversed]
 
@@ -29,17 +29,15 @@ def solveTangram(shape,polys,screen):
 
 def solveMultipolygon(multi_shapes,polys,screen):
     solution = []
-    polygons = polys.copy()
     shapes = list(multi_shapes.geoms)
     for shape in shapes:
-        local_solution = solvePolygon(shape,polygons,screen)
+        local_solution = solvePolygon(shape,polys,screen)
         # S'il n'existe pas de solution pour le multipolygon alors rien ne sert de résoudre le reste des polygones
         if local_solution == None:
             return None
         solution.extend(local_solution)
         for sol in local_solution:
-            print(sol)
-            polygons.remove(sol)
+            removePiece(polys,sol)
     return solution
     
 
@@ -52,7 +50,6 @@ def solvePolygon(shape,polys,screen):
         polygons = polys.copy()
         while polygons and not solved:
             selectedPolygon = selectPolygon(shape,shapePoint,polygons)
-            
             if(selectedPolygon == None):
                 break
             
@@ -71,12 +68,11 @@ def solvePolygon(shape,polys,screen):
                         difference = geom
                         break
 
-            if not difference.is_empty and difference.geom_type != "MultiPolygon":
-                pygame.gfxdraw.filled_polygon(screen, difference.exterior.coords,(0,0,150))
-                pygame.gfxdraw.aapolygon(screen, difference.exterior.coords,(0,0,150))
-                pygame.display.update()
-                #sleep(0.1)
-            nextPolys = solveTangram(difference,polygons,screen)
+            displayShape(difference,screen)
+
+            sub_list = polygons.copy()
+            removePiece(sub_list,selectedPolygon)
+            nextPolys = solveTangram(difference,sub_list,screen)
             if(nextPolys != None):
                 solution.append(selectedPolygon)
                 solution += nextPolys
@@ -85,8 +81,25 @@ def solvePolygon(shape,polys,screen):
                 selectedPolygon.Rotate(ROTATION_GAP)
             #remove after all rotations are tested
             if selectedPolygon.revolution:
-                polygons.remove(selectedPolygon)
+                polygons = removePiece(polygons,selectedPolygon)
     if(not solution):
         return None
     return solution
     
+
+def removePiece(list,piece):
+    length = len(list)
+    i=0
+    while i < length:
+        if list[i].id == piece.id:
+            list.remove(list[i])
+            i -= 1
+            length -= 1
+            print("removed: "+str(piece.id))
+        i += 1
+
+def displayShape(shape,screen):
+    if not shape.is_empty and shape.geom_type != "MultiPolygon":
+        pygame.gfxdraw.filled_polygon(screen, shape.exterior.coords,(0,0,150))
+        pygame.gfxdraw.aapolygon(screen, shape.exterior.coords,(0,0,150))
+        pygame.display.update()

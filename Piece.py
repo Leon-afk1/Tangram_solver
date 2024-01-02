@@ -5,24 +5,35 @@ import math
 from shapely.affinity import rotate
 
 class Piece():
-    def __init__(self,_polygon,_color, _coord=Point((0,0))):
+    def __init__(self,_polygon,_id,_color = (255,255,0), _coord=Point((0,0))):
         self.color = _color
         self.poly = Polygon(_polygon)
         self.coord = Point(_coord)
         self.grabOffset = self.coord
         self.rotation_angle = 0.0
         self.revolution = False
+        self.id = _id
 
+    def copy(self):
+        copied = Piece(self.getPoly(),self.id,self.color,self.getCoord())
+        copied.grabOffset = self.grabOffset
+        copied.rotation_angle = self.rotation_angle
+        copied.revolution = self.revolution
+        return copied
+    
     def display(self, screen):
         rotated_poly = rotate(self.poly, self.rotation_angle, origin=self.coord)
         pygame.gfxdraw.filled_polygon(screen, rotated_poly.exterior.coords, self.color)
         pygame.gfxdraw.aapolygon(screen, rotated_poly.exterior.coords, self.color)
 
     def getPoly(self):
-        return self.poly
+        return Polygon(self.poly)
     
     def setPoly(self, newPoly):
         self.poly = Polygon(newPoly)
+    
+    def getCoord(self):
+        return Point(self.coord)
 
     def moveToPoint(self, point):
         x, y = point

@@ -82,7 +82,7 @@ class launcher:
 
     def runTangram(self):
         screen = self.screen
-        tan = TangramGame(720,480)
+        tan = TangramGame(720,700)
         tan.run()
 
     def run(self):
