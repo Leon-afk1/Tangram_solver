@@ -13,6 +13,7 @@ class Piece():
         self.rotation_angle = 0.0
         self.revolution = False
         self.id = _id
+        self.origin_point = 0
 
     def copy(self):
         copied = Piece(self.getPoly(),self.id,self.color,self.getCoord())
@@ -21,10 +22,18 @@ class Piece():
         copied.revolution = self.revolution
         return copied
     
+    def resetRotation(self):
+        self.rotation_angle = 0
+        self.revolution = False
+
+    def reset(self):
+        self.resetRotation()
+        self.reference_point = 0
+        self.coord = self.poly.exterior.coords[0]
+
     def display(self, screen):
-        rotated_poly = rotate(self.poly, self.rotation_angle, origin=self.coord)
-        pygame.gfxdraw.filled_polygon(screen, rotated_poly.exterior.coords, self.color)
-        pygame.gfxdraw.aapolygon(screen, rotated_poly.exterior.coords, self.color)
+        pygame.gfxdraw.filled_polygon(screen, self.poly.exterior.coords, self.color)
+        pygame.gfxdraw.aapolygon(screen, self.poly.exterior.coords, self.color)
 
     def getPoly(self):
         return Polygon(self.poly)
@@ -49,8 +58,16 @@ class Piece():
         if self.CollisionCheck(pieces):
             self.rotation_angle -= angle
 
-        
+    def changeOriginPoint(self):
+        if self.origin_point + 2 >= len(self.poly.exterior.coords):
+            return False
+        last_origin = self.poly.exterior.coords[self.origin_point]
+        self.origin_point += 1
+        self.coord = Point(self.poly.exterior.coords[self.origin_point])
+        self.moveToPoint(last_origin)
+        return True
 
+    #   Shape Creator   #
     def setOffset(self, mousePos):
         x, y = mousePos
         x -= self.coord.x
@@ -101,3 +118,10 @@ def RotatePoint(point, angle):
     rad_angle = math.radians(angle)
     return(Point(point[0] * math.cos(rad_angle) - point[1] * math.sin(rad_angle), point[0] * math.sin(rad_angle) - point[1] * math.cos(rad_angle)))
     
+
+a = Piece(Polygon([(0,0),(400,0),(0,400)]), 0, (0,255,154))
+
+print(a.poly)
+for i in range (10):
+    a.changeOriginPoint()
+    print(a.poly)

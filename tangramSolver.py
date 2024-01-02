@@ -4,7 +4,8 @@ from pygame import gfxdraw
 from time import sleep
 from Piece import Piece
 
-ROTATION_GAP = 90
+ROTATION_GAP = 45
+SMALL_AREA = 1
 
 bigTriangle1 = Piece(Polygon([(0,0),(400,0),(0,400)]), 0, (0,255,154))
 bigTriangle2 = Piece(Polygon([(0,0),(400,0),(0,400)]), 1, (255,154,0))
@@ -21,13 +22,16 @@ tangramPieces = [bigTriangle1,bigTriangle2,mediumTriangle,smallTriangle1,smallTr
 def solveTangram(shape,polys,screen):
     solution = []
     if shape.geom_type == "MultiPolygon":
+        print("multi")
         solution = solveMultipolygon(shape,polys,screen)
     else:
+        print("single")
         solution = solvePolygon(shape,polys,screen)
     return solution
 
 
 def solveMultipolygon(multi_shapes,polys,screen):
+    print("enter")
     solution = []
     shapes = list(multi_shapes.geoms)
     for shape in shapes:
@@ -44,15 +48,16 @@ def solveMultipolygon(multi_shapes,polys,screen):
 def solvePolygon(shape,polys,screen):
     solved = False
     solution = []
-    if shape.is_empty:
+    if shape.is_empty or shape.area < SMALL_AREA:
         return solution
     for shapePoint in shape.exterior.coords:
         polygons = polys.copy()
         while polygons and not solved:
             selectedPolygon = selectPolygon(shape,shapePoint,polygons)
+            
+
             if(selectedPolygon == None):
                 break
-            
             selectedPolygon.moveToPoint(shapePoint)
 
             ####
@@ -70,36 +75,54 @@ def solvePolygon(shape,polys,screen):
 
             displayShape(difference,screen)
 
-            sub_list = polygons.copy()
-            removePiece(sub_list,selectedPolygon)
+            sub_list = createSubList(polygons,selectedPolygon)
+
             nextPolys = solveTangram(difference,sub_list,screen)
+
+            realPoly = getRealPoly(selectedPolygon,polygons)
             if(nextPolys != None):
                 solution.append(selectedPolygon)
-                solution += nextPolys
+                solution.extend(nextPolys)
                 solved = True
+                break
             else:
-                selectedPolygon.Rotate(ROTATION_GAP)
+                realPoly.Rotate(ROTATION_GAP)
+                print(realPoly.rotation_angle)
             #remove after all rotations are tested
-            if selectedPolygon.revolution:
+            if realPoly.revolution:
                 polygons = removePiece(polygons,selectedPolygon)
+            else:
+                realPoly.resetRotation()
+                if not realPoly.changeOriginPoint():
+                    polygons = removePiece(polygons,selectedPolygon)
     if(not solution):
         return None
     return solution
     
 
 def removePiece(list,piece):
-    length = len(list)
-    i=0
-    while i < length:
-        if list[i].id == piece.id:
-            list.remove(list[i])
-            i -= 1
-            length -= 1
-            print("removed: "+str(piece.id))
-        i += 1
+    ret = []
+    for p in list:
+        if p.id != piece.id:
+            ret.append(p)
+    return ret
 
 def displayShape(shape,screen):
     if not shape.is_empty and shape.geom_type != "MultiPolygon":
         pygame.gfxdraw.filled_polygon(screen, shape.exterior.coords,(0,0,150))
         pygame.gfxdraw.aapolygon(screen, shape.exterior.coords,(0,0,150))
         pygame.display.update()
+
+def getRealPoly(selected,polys):
+    for poly in polys:
+        if selected.id == poly.id:
+            return poly
+
+def createSubList(polygons,selectedPolygon):
+    sub_list = []
+    for poly in polygons:
+        if selectedPolygon.id != poly.id:
+            resetedPoly = poly.copy()
+            resetedPoly.reset()
+            sub_list.append(resetedPoly)
+    return sub_list

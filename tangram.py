@@ -38,5 +38,8 @@ class TangramGame:
     
     def displaySolution(self,solution):
         self.screen.fill((255,255,255))
+        if solution == None:
+            print("No solution")
+            return
         for piece in solution:
             piece.display(self.screen)

@@ -21,9 +21,7 @@ def fullyIn(polygon,shape):
 #   checks if a polygon is going into that place by rotating it and moving it towards the point
 def selectPolygon(shape,point,polygons):
     #todo
-    i = 0
     for polygon in polygons:
-        i +=1
         piece = polygon.copy()
         if(polygonIn(shape,point,piece)):
             return piece
