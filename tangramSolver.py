@@ -5,7 +5,7 @@ from time import sleep
 from Piece import Piece
 
 ROTATION_GAP = 45
-SMALL_AREA = 1
+SMALL_AREA = 10
 
 bigTriangle1 = Piece(Polygon([(0,0),(400,0),(0,400)]), 0, (0,255,154))
 bigTriangle2 = Piece(Polygon([(0,0),(400,0),(0,400)]), 1, (255,154,0))
@@ -22,16 +22,13 @@ tangramPieces = [bigTriangle1,bigTriangle2,mediumTriangle,smallTriangle1,smallTr
 def solveTangram(shape,polys,screen):
     solution = []
     if shape.geom_type == "MultiPolygon":
-        print("multi")
         solution = solveMultipolygon(shape,polys,screen)
     else:
-        print("single")
         solution = solvePolygon(shape,polys,screen)
     return solution
 
 
 def solveMultipolygon(multi_shapes,polys,screen):
-    print("enter")
     solution = []
     shapes = list(multi_shapes.geoms)
     for shape in shapes:
@@ -87,7 +84,6 @@ def solvePolygon(shape,polys,screen):
                 break
             else:
                 realPoly.Rotate(ROTATION_GAP)
-                print(realPoly.rotation_angle)
             #remove after all rotations are tested
             if realPoly.revolution:
                 polygons = removePiece(polygons,selectedPolygon)

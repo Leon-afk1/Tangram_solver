@@ -7,8 +7,13 @@ import shapely
 def fullyIn(polygon,shape):
     #   rouding security
     EPSILON = 0.005
-    if not shape.intersection(polygon).is_empty:
-        intersection = shape.intersection(polygon)
+    multishape = MultiPolygon([shape])
+    if not shape.is_valid:
+        print(shape)
+        print("invalid shape")
+        return False
+    if not multishape.intersection(polygon).is_empty:
+        intersection = multishape.intersection(polygon)
         if(abs(intersection.area - polygon.area) <= EPSILON):
             return True
         else:

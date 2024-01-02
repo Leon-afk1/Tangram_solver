@@ -118,10 +118,3 @@ def RotatePoint(point, angle):
     rad_angle = math.radians(angle)
     return(Point(point[0] * math.cos(rad_angle) - point[1] * math.sin(rad_angle), point[0] * math.sin(rad_angle) - point[1] * math.cos(rad_angle)))
     
-
-a = Piece(Polygon([(0,0),(400,0),(0,400)]), 0, (0,255,154))
-
-print(a.poly)
-for i in range (10):
-    a.changeOriginPoint()
-    print(a.poly)
