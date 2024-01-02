@@ -66,6 +66,7 @@ def solvePolygon(shape,polys,screen):
             ####
             screen.fill((255,255,255))
             selectedPolygon.display(screen)
+            pygame.display.update()
             ####
 
             difference = shape.difference(selectedPolygon.getPoly())
@@ -73,7 +74,7 @@ def solvePolygon(shape,polys,screen):
                 pygame.gfxdraw.filled_polygon(screen, difference.exterior.coords,(0,0,150))
                 pygame.gfxdraw.aapolygon(screen, difference.exterior.coords,(0,0,150))
                 pygame.display.update()
-                #sleep(0.1)
+                sleep(1)
             nextPolys = solveTangram(difference,polygons,screen)
             if(nextPolys != None):
                 solution.append(selectedPolygon)
