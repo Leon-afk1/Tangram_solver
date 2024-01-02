@@ -26,7 +26,7 @@ class TangramGame:
         self.i = 50
 
     def run(self):
-        solution = solveTangram(self.testShape, tangramPieces, self.screen)
+        solution = solveTangram(self.squareShape, tangramPieces, self.screen)
         print(solution)
         self.displaySolution(solution)
         while self.running:

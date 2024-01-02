@@ -11,6 +11,7 @@ class Piece():
         self.coord = Point(_coord)
         self.grabOffset = self.coord
         self.rotation_angle = 0.0
+        self.revolution = False
 
     def display(self, screen):
         rotated_poly = rotate(self.poly, self.rotation_angle, origin=self.coord)
@@ -75,8 +76,11 @@ class Piece():
 
     def Rotate(self, angle):
         self.rotation_angle += angle
+        if self.rotation_angle >= 360:
+            self.revolution = True 
+            self.rotation_angle -= 360
         self.poly = rotate(self.poly, self.rotation_angle, origin=self.coord)
-
+        
         #self.poly = Polygon(RotatePoint(point,angle) for point in self.poly.exterior.coords)
 
 

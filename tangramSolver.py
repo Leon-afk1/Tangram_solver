@@ -4,6 +4,8 @@ from pygame import gfxdraw
 from time import sleep
 from Piece import Piece
 
+ROTATION_GAP = 90
+
 bigTriangle1 = Piece(Polygon([(0,0),(400,0),(0,400)]),(0,255,154))
 bigTriangle2 = Piece(Polygon([(0,0),(400,0),(0,400)]),(255,154,0))
 mediumTriangle = Piece(Polygon([(0,0),(200,0),(0,200)]),(255,0,0))
@@ -36,6 +38,7 @@ def solveMultipolygon(multi_shapes,polys,screen):
             return None
         solution.extend(local_solution)
         for sol in local_solution:
+            print(sol)
             polygons.remove(sol)
     return solution
     
@@ -52,8 +55,7 @@ def solvePolygon(shape,polys,screen):
             
             if(selectedPolygon == None):
                 break
-
-            polygons.remove(selectedPolygon)
+            
             selectedPolygon.moveToPoint(shapePoint)
 
             ####
@@ -62,6 +64,13 @@ def solvePolygon(shape,polys,screen):
             ####
 
             difference = shape.difference(selectedPolygon.getPoly())
+            #####   bug Fix ######
+            if difference.geom_type == "GeometryCollection":
+                for geom in difference.geoms:
+                    if(geom.geom_type in ["MultiPolygon","Polygon"]):
+                        difference = geom
+                        break
+
             if not difference.is_empty and difference.geom_type != "MultiPolygon":
                 pygame.gfxdraw.filled_polygon(screen, difference.exterior.coords,(0,0,150))
                 pygame.gfxdraw.aapolygon(screen, difference.exterior.coords,(0,0,150))
@@ -72,6 +81,11 @@ def solvePolygon(shape,polys,screen):
                 solution.append(selectedPolygon)
                 solution += nextPolys
                 solved = True
+            else:
+                selectedPolygon.Rotate(ROTATION_GAP)
+            #remove after all rotations are tested
+            if selectedPolygon.revolution:
+                polygons.remove(selectedPolygon)
     if(not solution):
         return None
     return solution
