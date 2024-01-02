@@ -10,18 +10,18 @@ class Piece():
         self.poly = Polygon(_polygon)
         self.coord = Point(_coord)
         self.grabOffset = self.coord
-        self.rotation_angle = 0.0
 
     def display(self, screen):
-        rotated_poly = rotate(self.poly, self.rotation_angle, origin=self.coord)
-        pygame.gfxdraw.filled_polygon(screen, rotated_poly.exterior.coords, self.color)
-        pygame.gfxdraw.aapolygon(screen, rotated_poly.exterior.coords, self.color)
+        #rotated_poly = rotate(self.poly, self.rotation_angle, origin=self.coord)
+        pygame.gfxdraw.filled_polygon(screen, self.poly.exterior.coords, self.color)
+        pygame.gfxdraw.aapolygon(screen, self.poly.exterior.coords, self.color)
 
     def getPoly(self):
         return self.poly
     
     def setPoly(self, newPoly):
         self.poly = Polygon(newPoly)
+        return self
 
     def moveToPoint(self, point):
         x, y = point
@@ -36,6 +36,7 @@ class Piece():
         self.rotation_angle += angle
         if self.CollisionCheck(pieces):
             self.rotation_angle -= angle
+        return self
 
         
 
@@ -72,12 +73,32 @@ class Piece():
             if buffered_poly.intersects(piece.poly):
                 return True
     
+    def GetRotated(self,angle):
+        return Piece(Polygon(RotatePoint(point,angle) for point in self.poly.exterior.coords),self.color,self.coord)
+
+    def GetChangedPoly(self,polygon):
+        return Piece(polygon,self.color,self.coord)
 
     def Rotate(self, angle):
         self.poly = Polygon(RotatePoint(point,angle) for point in self.poly.exterior.coords)
+        return self
+    
+
+    def Transform(self,anchor):
+        self.poly = Polygon(Subtract(point,anchor) for point in self.poly.exterior.coords)
+        
+    def GetTransformed(self,anchor):
+        return Piece(Polygon(Subtract(point,anchor) for point in self.poly.exterior.coords),self.color,self.coord)
+
+    def string(self):
+        listcoords = [str(coord) for coord in self.poly.exterior.coords]
+        return "Color : " + str(self.color) + "\n" + "Shape : " + str(listcoords)   + "\n" + "Coords : " + str(self.coord) + "\n"
 
 
-# je sais pas ou mettre cette fonction pour que y'ai que la class piece.py dans ce fichier
+
+def Subtract(point1,point2):
+    return Point(point1[0]-point2[0],point1[1]-point2[1])
+
 def RotatePoint(point, angle):
     rad_angle = math.radians(angle)
     return(Point(point[0] * math.cos(rad_angle) - point[1] * math.sin(rad_angle), point[0] * math.sin(rad_angle) - point[1] * math.cos(rad_angle)))

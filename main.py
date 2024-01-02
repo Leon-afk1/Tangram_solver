@@ -6,7 +6,7 @@ from tangramSolver import *
 
 pygame.init()
 
-# test 2
+# test 1
 
 # pour la fenetre (osef tier)
 background_colour = (255,255,255)
@@ -16,7 +16,9 @@ pygame.display.set_caption('Tangram')
 screen.fill(background_colour)
 running = True
  
+
 squareShape = Polygon([(0, 0), (0, 400*sqrt(2)), (400*sqrt(2), 400*sqrt(2)), (400*sqrt(2), 0)])
+squareShape2 = Polygon([(0, 0), (0, 400), (400, 400), (400, 0)])
 polygon1 = Polygon([(0.5, -0.866025), (1, 0), (0.5, 0.866025), (-0.5, 0.866025), (-1, 0), (-0.5, -0.866025)])
 polygon1 = transform(polygon1,lambda x:x*100+(100,100))
 polygon2 = Polygon([(1, -0.866025), (1.866025, 0), (1, 0.866025), (0.133975, 0)])
@@ -25,6 +27,11 @@ difference = polygon2.difference(polygon1)
 polygons = MultiPolygon([squareShape, polygon1, polygon2,difference])
 
 i = 50
+
+
+
+
+
 
 
 for poly in polygons.geoms:
