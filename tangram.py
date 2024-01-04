@@ -21,6 +21,7 @@ class TangramGame:
         mediumTriangleTest = Polygon([(400,400),(600,400),(400,600)])
 
         self.squareShape = Polygon([(0, 0), (0, 400 * sqrt(2)), (400 * sqrt(2), 400 * sqrt(2)), (400 * sqrt(2), 0)])
+        self.squareShapeOffseted = Polygon([(100, 100), (100,100+ 400 * sqrt(2)), (100 + 400 * sqrt(2), 100 + 400 * sqrt(2)), (100 + 400 * sqrt(2), 100)])
         self.testShape = MultiPolygon([bigTriangle1,mediumTriangleTest])
 
         self.i = 50

@@ -28,8 +28,12 @@ class Piece():
 
     def reset(self):
         self.resetRotation()
-        self.reference_point = 0
-        self.coord = self.poly.exterior.coords[0]
+        
+        #   reset origin point of piece
+        last_origin = self.poly.exterior.coords[self.origin_point]
+        self.origin_point = 0
+        self.coord = Point(self.poly.exterior.coords[0])
+        self.moveToPoint(last_origin)
 
     def display(self, screen):
         pygame.gfxdraw.filled_polygon(screen, self.poly.exterior.coords, self.color)
@@ -53,19 +57,33 @@ class Piece():
         self.poly = Polygon(coords)
         self.coord = Point(point)
 
+    def allPositionUsed(self):
+        return self.allPointUsed() and self.revolution
+
+    def nextPosition(self,angle):
+        if self.revolution:
+            self.resetRotation()
+            if not self.allPointUsed():
+                self.changeOriginPoint()
+        else:
+            self.Rotate(angle)
+
     def rotate(self, angle,pieces):
         self.rotation_angle += angle
         if self.CollisionCheck(pieces):
             self.rotation_angle -= angle
 
     def changeOriginPoint(self):
+        if not self.allPointUsed():
+            last_origin = self.poly.exterior.coords[self.origin_point]
+            self.origin_point += 1
+            self.coord = Point(self.poly.exterior.coords[self.origin_point])
+            self.moveToPoint(last_origin)
+            
+    def allPointUsed(self):
         if self.origin_point + 2 >= len(self.poly.exterior.coords):
-            return False
-        last_origin = self.poly.exterior.coords[self.origin_point]
-        self.origin_point += 1
-        self.coord = Point(self.poly.exterior.coords[self.origin_point])
-        self.moveToPoint(last_origin)
-        return True
+            return True
+        return False
 
     #   Shape Creator   #
     def setOffset(self, mousePos):

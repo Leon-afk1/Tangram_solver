@@ -3,18 +3,21 @@ import pygame
 from pygame import gfxdraw
 from time import sleep
 from Piece import Piece
+from math import sqrt
 
+#   rouding security
+EPSILON = 0.05
 ROTATION_GAP = 45
-SMALL_AREA = 10
+SMALL_AREA = 0.0
 
 bigTriangle1 = Piece(Polygon([(0,0),(400,0),(0,400)]), 0, (0,255,154))
 bigTriangle2 = Piece(Polygon([(0,0),(400,0),(0,400)]), 1, (255,154,0))
-mediumTriangle = Piece(Polygon([(0,0),(200,0),(0,200)]), 2, (255,0,0))
-smallTriangle1 = Piece(Polygon([(0,0),(100,0),(0,100)]), 3, (189,126,0))
-smallTriangle2 = Piece(Polygon([(0,0),(100,0),(0,100)]), 4, (189,0,145))
-square = Piece(Polygon([(0,0),(100,0),(100,100),(0,100)]), 5, (247,255,0))
-trapeze = Piece(Polygon([(0,0),(100,-100),(100,0),(0,100)]), 6, (0,0,204))
-trapezeInversed = Piece(Polygon([(0,0),(100,0),(0,100),(-100,100)]), 6, (0,0,204))
+mediumTriangle = Piece(Polygon([(0,0),(200*sqrt(2),0),(0,200*sqrt(2))]), 2, (255,0,0))
+smallTriangle1 = Piece(Polygon([(0,0),(200,0),(0,200)]), 3, (189,126,0))
+smallTriangle2 = Piece(Polygon([(0,0),(200,0),(0,200)]), 4, (189,0,145))
+square = Piece(Polygon([(0,0),(200,0),(200,200),(0,200)]), 5, (247,255,0))
+trapeze = Piece(Polygon([(0,0),(200,-200),(200,0),(0,200)]), 6, (0,0,204))
+trapezeInversed = Piece(Polygon([(0,0),(200,0),(0,200),(-200,200)]), 6, (0,0,204))
 
 tangramPieces = [bigTriangle1,bigTriangle2,mediumTriangle,smallTriangle1,smallTriangle2,square,trapeze,trapezeInversed]
 
@@ -38,26 +41,29 @@ def solveMultipolygon(multi_shapes,polys,screen):
             return None
         solution.extend(local_solution)
         for sol in local_solution:
-            removePiece(polys,sol)
+            polys = removePiece(polys,sol)
     return solution
     
 
 def solvePolygon(shape,polys,screen):
-    solved = False
+    # displayShape(shape,screen)
     solution = []
+
     if shape.is_empty or shape.area < SMALL_AREA:
+        displayShape(shape,screen)
         return solution
     for shapePoint in shape.exterior.coords:
         polygons = polys.copy()
-        while polygons and not solved:
-            selectedPolygon = selectPolygon(shape,shapePoint,polygons)
-            
+        while polygons:
+            # sleep(1)
+            selectedPolygon,polygons = selectPolygon(shape,shapePoint,polygons)
 
             if(selectedPolygon == None):
                 break
+            selectedPolygon = selectedPolygon.copy()
             selectedPolygon.moveToPoint(shapePoint)
 
-            ####
+            # ####
             screen.fill((255,255,255))
             selectedPolygon.display(screen)
             ####
@@ -72,31 +78,26 @@ def solvePolygon(shape,polys,screen):
 
             displayShape(difference,screen)
 
-            sub_list = createSubList(polygons,selectedPolygon)
+            # use the poly list because polygons list delete pieces as they don't fit
+            sub_list = createSubList(polys,selectedPolygon)
 
             nextPolys = solveTangram(difference,sub_list,screen)
 
-            realPoly = getRealPoly(selectedPolygon,polygons)
             if(nextPolys != None):
                 solution.append(selectedPolygon)
+                print("solution" + str(solution))
+
                 solution.extend(nextPolys)
-                solved = True
-                break
-            else:
-                realPoly.Rotate(ROTATION_GAP)
-            #remove after all rotations are tested
-            if realPoly.revolution:
-                polygons = removePiece(polygons,selectedPolygon)
-            else:
-                realPoly.resetRotation()
-                if not realPoly.changeOriginPoint():
-                    polygons = removePiece(polygons,selectedPolygon)
-    if(not solution):
-        return None
-    return solution
+                print("next polys: " + str(nextPolys))
+                
+                return solution
+
+    return None
     
 
 def removePiece(list,piece):
+
+    print("removed: "+str(piece.id))
     ret = []
     for p in list:
         if p.id != piece.id:
@@ -115,6 +116,7 @@ def getRealPoly(selected,polys):
             return poly
 
 def createSubList(polygons,selectedPolygon):
+    # print("create sub_list without n°" + str(selectedPolygon.id))
     sub_list = []
     for poly in polygons:
         if selectedPolygon.id != poly.id:
@@ -122,3 +124,57 @@ def createSubList(polygons,selectedPolygon):
             resetedPoly.reset()
             sub_list.append(resetedPoly)
     return sub_list
+
+    
+#   checks if a polygon is going into that place by rotating it and moving it towards the point
+def selectPolygon(shape,point,polygons):
+    selectedPolygon = None
+    new_polygon_list = []
+    found = False
+
+    for p in polygons:
+        if found:
+            new_polygon_list.append(p)
+        else:
+            found = checkPiece(shape,point,p)
+            if found:
+                selectedPolygon = p
+
+    # print("selected: "+ str(selectedPolygon.id))
+
+    return (selectedPolygon,new_polygon_list)
+    
+        
+
+def checkPiece(shape,point,piece):
+    while not piece.allPositionUsed():
+        if polygonIn(shape,point,piece):
+            return True
+        piece.nextPosition(ROTATION_GAP)
+    return False
+
+#checks if a polygon is in the shape by moving it on the point
+def polygonIn(shape,point,piece):
+    piece.moveToPoint(point)
+    return fullyIn(piece.getPoly(),shape)
+
+#   detects if a polygon is fully into another
+#   returns true or false
+def fullyIn(polygon,shape):
+
+    multishape = MultiPolygon([shape])
+    if not shape.is_valid:
+        make_valid(shape)
+        if not shape.is_valid:
+            print(shape)
+            return False
+    if not multishape.intersection(polygon).is_empty:
+        intersection = multishape.intersection(polygon)
+        if(abs(intersection.area - polygon.area) <= EPSILON):
+            # print("intersection area :" + str(intersection.area))
+            # print("intersectrion: "+ str(intersection))
+            return True
+        else:
+            return False
+    else:
+        return False
