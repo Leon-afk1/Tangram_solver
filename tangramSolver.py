@@ -6,13 +6,15 @@ from Piece import Piece
 from math import sqrt
 
 #   rouding security
-EPSILON = 0.05
+EPSILON = 1
 ROTATION_GAP = 45
-SMALL_AREA = 0.0
+SMALL_AREA = 10
+
+already_tested = []
 
 bigTriangle1 = Piece(Polygon([(0,0),(400,0),(0,400)]), 0, (0,255,154))
 bigTriangle2 = Piece(Polygon([(0,0),(400,0),(0,400)]), 1, (255,154,0))
-mediumTriangle = Piece(Polygon([(0,0),(200*sqrt(2),0),(0,200*sqrt(2))]), 2, (255,0,0))
+mediumTriangle = Piece(Polygon([(0,0),(round(200*sqrt(2),3),0),(0,round(200*sqrt(2),3))]), 2, (255,0,0))
 smallTriangle1 = Piece(Polygon([(0,0),(200,0),(0,200)]), 3, (189,126,0))
 smallTriangle2 = Piece(Polygon([(0,0),(200,0),(0,200)]), 4, (189,0,145))
 square = Piece(Polygon([(0,0),(200,0),(200,200),(0,200)]), 5, (247,255,0))
@@ -46,7 +48,6 @@ def solveMultipolygon(multi_shapes,polys,screen):
     
 
 def solvePolygon(shape,polys,screen):
-    # displayShape(shape,screen)
     solution = []
 
     if shape.is_empty or shape.area < SMALL_AREA:
@@ -56,11 +57,12 @@ def solvePolygon(shape,polys,screen):
         polygons = polys.copy()
         while polygons:
             # sleep(1)
-            selectedPolygon,polygons = selectPolygon(shape,shapePoint,polygons)
+            selectedPolygonReal,polygons = selectPolygon(shape,shapePoint,polygons)
 
-            if(selectedPolygon == None):
+            if(selectedPolygonReal == None):
                 break
-            selectedPolygon = selectedPolygon.copy()
+            selectedPolygon = selectedPolygonReal.copy()
+            selectedPolygonReal.nextPosition(ROTATION_GAP)
             selectedPolygon.moveToPoint(shapePoint)
 
             # ####
@@ -75,29 +77,24 @@ def solvePolygon(shape,polys,screen):
                     if(geom.geom_type in ["MultiPolygon","Polygon"]):
                         difference = geom
                         break
-
+            
+            difference = roundShape(difference,2)
             displayShape(difference,screen)
 
             # use the poly list because polygons list delete pieces as they don't fit
             sub_list = createSubList(polys,selectedPolygon)
-
+            nextPolys = None
             nextPolys = solveTangram(difference,sub_list,screen)
 
             if(nextPolys != None):
                 solution.append(selectedPolygon)
-                print("solution" + str(solution))
-
                 solution.extend(nextPolys)
-                print("next polys: " + str(nextPolys))
                 
                 return solution
-
     return None
     
 
 def removePiece(list,piece):
-
-    print("removed: "+str(piece.id))
     ret = []
     for p in list:
         if p.id != piece.id:
@@ -140,14 +137,14 @@ def selectPolygon(shape,point,polygons):
             if found:
                 selectedPolygon = p
 
-    # print("selected: "+ str(selectedPolygon.id))
-
     return (selectedPolygon,new_polygon_list)
     
         
 
 def checkPiece(shape,point,piece):
     while not piece.allPositionUsed():
+        if(piece.id == 0):
+            print("rotation angle: "+str(piece.rotation_angle),", point : " + str(piece.origin_point))
         if polygonIn(shape,point,piece):
             return True
         piece.nextPosition(ROTATION_GAP)
@@ -166,15 +163,61 @@ def fullyIn(polygon,shape):
     if not shape.is_valid:
         make_valid(shape)
         if not shape.is_valid:
-            print(shape)
-            return False
+            print("error")
     if not multishape.intersection(polygon).is_empty:
         intersection = multishape.intersection(polygon)
         if(abs(intersection.area - polygon.area) <= EPSILON):
-            # print("intersection area :" + str(intersection.area))
-            # print("intersectrion: "+ str(intersection))
             return True
         else:
             return False
     else:
         return False
+
+
+def roundShape(shape,digit):
+    if shape.geom_type == "MultiPolygon":
+        shapes = list(shape.geoms)
+        for poly in shapes:
+            poly = roundPoly(poly,digit)
+    else:
+        shape = roundPoly(shape,digit)
+    return shape
+    
+def roundPoly(poly,digit):
+    if poly.area < SMALL_AREA:
+        return Polygon()
+    coords = poly.exterior.coords[:]
+    for i in range(len(coords)):
+        x,y = coords[i]
+        coords[i] = (round(x,digit),round(y,digit))
+    poly = Polygon(coords)
+    make_valid(poly)
+    return poly
+
+def checkTested(shape,polygons):
+    ids = []
+    for poly in polygons:
+        if poly.id == 1:
+            ids.append(0)
+        if poly.id == 4:
+            ids.append(3)
+        else:
+            ids.append(poly.id)
+    ids.sort()
+    for tested in already_tested:
+        if tested[0].equals_exact(shape, SMALL_AREA) and ids == tested[1]:
+            print("avoided")
+            return True
+    return False
+
+def saveTested(shape,polygons):
+    ids = []
+    for poly in polygons:
+        if poly.id == 1:
+            ids.append(0)
+        if poly.id == 4:
+            ids.append(3)
+        else:
+            ids.append(poly.id)
+    ids.sort()
+    already_tested.append([shape,ids])

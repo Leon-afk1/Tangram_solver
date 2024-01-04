@@ -22,22 +22,24 @@ class Piece():
         copied.revolution = self.revolution
         return copied
     
+    def roundPoly(self):
+        coords = self.poly.exterior.coords[:]
+        for i in range(len(coords)):
+            x,y = coords[i]
+            coords[i] = (round(x,2),round(y,2))
+        self.poly = Polygon(coords)
+
     def resetRotation(self):
         self.rotation_angle = 0
         self.revolution = False
 
     def reset(self):
         self.resetRotation()
-        
         #   reset origin point of piece
         last_origin = self.poly.exterior.coords[self.origin_point]
         self.origin_point = 0
         self.coord = Point(self.poly.exterior.coords[0])
         self.moveToPoint(last_origin)
-
-    def display(self, screen):
-        pygame.gfxdraw.filled_polygon(screen, self.poly.exterior.coords, self.color)
-        pygame.gfxdraw.aapolygon(screen, self.poly.exterior.coords, self.color)
 
     def getPoly(self):
         return Polygon(self.poly)
@@ -68,10 +70,13 @@ class Piece():
         else:
             self.Rotate(angle)
 
-    def rotate(self, angle,pieces):
+    def Rotate(self, angle):
         self.rotation_angle += angle
-        if self.CollisionCheck(pieces):
-            self.rotation_angle -= angle
+        if self.rotation_angle >= 360:
+            self.revolution = True 
+            self.rotation_angle -= 360
+        self.poly = rotate(self.poly, self.rotation_angle, origin=self.coord)
+        self.roundPoly()
 
     def changeOriginPoint(self):
         if not self.allPointUsed():
@@ -86,6 +91,10 @@ class Piece():
         return False
 
     #   Shape Creator   #
+    def display(self, screen):
+        pygame.gfxdraw.filled_polygon(screen, self.poly.exterior.coords, self.color)
+        pygame.gfxdraw.aapolygon(screen, self.poly.exterior.coords, self.color)
+
     def setOffset(self, mousePos):
         x, y = mousePos
         x -= self.coord.x
@@ -118,21 +127,8 @@ class Piece():
         for piece in pieces:
             if buffered_poly.intersects(piece.poly):
                 return True
-    
-
-    def Rotate(self, angle):
+            
+    def rotate(self, angle,pieces):
         self.rotation_angle += angle
-        if self.rotation_angle >= 360:
-            self.revolution = True 
-            self.rotation_angle -= 360
-        self.poly = rotate(self.poly, self.rotation_angle, origin=self.coord)
-        
-        #self.poly = Polygon(RotatePoint(point,angle) for point in self.poly.exterior.coords)
-
-
-
-# je sais pas ou mettre cette fonction pour que y'ai que la class piece.py dans ce fichier
-def RotatePoint(point, angle):
-    rad_angle = math.radians(angle)
-    return(Point(point[0] * math.cos(rad_angle) - point[1] * math.sin(rad_angle), point[0] * math.sin(rad_angle) - point[1] * math.cos(rad_angle)))
-    
+        if self.CollisionCheck(pieces):
+            self.rotation_angle -= angle
