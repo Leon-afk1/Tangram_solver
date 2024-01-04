@@ -9,9 +9,10 @@ def fullyIn(polygon,shape):
     EPSILON = 0.005
     multishape = MultiPolygon([shape])
     if not shape.is_valid:
-        print(shape)
-        print("invalid shape")
-        return False
+        make_valid(shape)
+        if not shape.is_valid:
+            print(shape)
+            return False
     if not multishape.intersection(polygon).is_empty:
         intersection = multishape.intersection(polygon)
         if(abs(intersection.area - polygon.area) <= EPSILON):
