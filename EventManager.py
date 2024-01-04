@@ -40,6 +40,7 @@ class EventManager():
     def OnMouseDown(self):
         mousePos = pygame.mouse.get_pos()
         mousePosPoint = Point(mousePos)
+        print(mousePos)
         for piece in self.pieces:
             if(mousePosPoint.within(piece.poly)):
                 self.pieceHeld = piece

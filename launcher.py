@@ -6,6 +6,7 @@ from tangramSolver import *
 import numpy as np
 from tangram import *
 from test import *
+from Choix import *
 
 pygame.init()
 
@@ -20,17 +21,17 @@ class launcher:
         self.clock = pygame.time.Clock()
 
         #fond
-        self.fond = pygame.image.load('fond.png')
+        self.fond = pygame.image.load('image/fond.png')
         self.rect = self.fond.get_rect(topleft=(0, 0))
 
         #bouton resoudre
-        self.resoudre=pygame.image.load('resoudre.png')
+        self.resoudre=pygame.image.load('image/resoudre.png')
 
         self.resoudre_width = self.resoudre.get_width()
         self.resoudre_height = self.resoudre.get_height()
 
         #bouton creer un tangram
-        self.creer=pygame.image.load('creerUnFond.png')
+        self.creer=pygame.image.load('image/creerUnFond.png')
 
         self.creer_width = self.creer.get_width()
         self.creer_height = self.creer.get_height()
@@ -66,7 +67,8 @@ class launcher:
     def OnMouseDown(self):
         (x,y) = pygame.mouse.get_pos()
         if (self.resoudre_x <= x < self.resoudre_x + self.resoudre_width) and (self.resoudre_y <= y < self.resoudre_y + self.resoudre_height):
-            self.runTangram()
+            choix=Choix(self.screen)
+            choix.run()
         elif (self.creer_x <= x < self.creer_x + self.creer_width) and (self.creer_y <= y < self.creer_y + self.creer_height):
             gameConstructor = TangramConstructor(720, 480)
             gameConstructor.run()
