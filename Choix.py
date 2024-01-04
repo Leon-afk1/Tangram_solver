@@ -38,10 +38,10 @@ class Choix:
         
         #bouton chameau
         
-        self.chameau=pygame.image.load('image/chameau.png')
+        self.chat=pygame.image.load('image/chat.png')
 
-        self.chameau_width = self.chameau.get_width()
-        self.chameau_height = self.chameau.get_height()
+        self.chat_width = self.chat.get_width()
+        self.chat_height = self.chat.get_height()
         
         #bouton lapin
         
@@ -74,8 +74,8 @@ class Choix:
         self.multipolygon_x =( (window_width - self.multipolygon_width) // 2)
         self.multipolygon_y =( (window_height - self.multipolygon_height) // 2)-100
         
-        self.chameau_x =( (window_width - self.chameau_width) // 2)
-        self.chameau_y =( (window_height - self.chameau_height) // 2)-50
+        self.chat_x =( (window_width - self.chat_width) // 2)
+        self.chat_y =( (window_height - self.chat_height) // 2)-50
         
         self.lapin_x =( (window_width - self.lapin_width) // 2)
         self.lapin_y =( (window_height - self.lapin_height) // 2)
@@ -92,8 +92,8 @@ class Choix:
         self.rect2 = self.multipolygon.get_rect(topleft=(self.multipolygon_x, self.multipolygon_y))
         self.mask_multipolygon = pygame.mask.from_surface(self.multipolygon)
         
-        self.rect3 = self.chameau.get_rect(topleft=(self.chameau_x, self.chameau_y))
-        self.mask_chameau = pygame.mask.from_surface(self.chameau)
+        self.rect3 = self.chat.get_rect(topleft=(self.chat_x, self.chat_y))
+        self.mask_chat = pygame.mask.from_surface(self.chat)
         
         self.rect4 = self.lapin.get_rect(topleft=(self.lapin_x, self.lapin_y))
         self.mask_lapin = pygame.mask.from_surface(self.lapin)
@@ -123,9 +123,9 @@ class Choix:
         if (self.multipolygon_x <= x < self.multipolygon_x + self.multipolygon_width) and (self.multipolygon_y <= y < self.multipolygon_y + self.multipolygon_height):
             print("multipolygon")
             self.runTangram("multipolygon")
-        if (self.chameau_x <= x < self.chameau_x + self.chameau_width) and (self.chameau_y <= y < self.chameau_y + self.chameau_height):
-            print("chameau")
-            self.runTangram("chameau")
+        if (self.chat_x <= x < self.chat_x + self.chat_width) and (self.chat_y <= y < self.chat_y + self.chat_height):
+            print("chat")
+            self.runTangram("chat")
         if (self.lapin_x <= x < self.lapin_x + self.lapin_width) and (self.lapin_y <= y < self.lapin_y + self.lapin_height):
             print("lapin")
             self.runTangram("lapin")
@@ -144,7 +144,7 @@ class Choix:
 
         screen.blit(self.carre_basique,self.rect1.topleft)
         screen.blit(self.multipolygon,self.rect2.topleft)
-        screen.blit(self.chameau,self.rect3.topleft)
+        screen.blit(self.chat,self.rect3.topleft)
         screen.blit(self.lapin,self.rect4.topleft)
         screen.blit(self.ours,self.rect5.topleft)
         screen.blit(self.forme_construite,self.rect6.topleft)

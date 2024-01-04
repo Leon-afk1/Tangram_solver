@@ -6,11 +6,22 @@ from Piece import Piece
 
 class ShapeGestion():
     def saveShapeFile(self, path, pieces):
-        exterior_coords = []
-        for piece in pieces:
-            exterior_coords.extend(piece.poly.exterior.coords)
+        exterior_coords = [piece.poly.exterior.coords[:] for piece in pieces]
+        merged_polygon = unary_union([Polygon(coords) for coords in exterior_coords])
 
-        shape_data = {'exterior_coords': exterior_coords}
+        shape_data = {'exterior_coords': []}
+
+        if isinstance(merged_polygon, MultiPolygon):
+            # Si les pièces forment un MultiPolygon, ajoutez chaque polygone séparément
+            print("multi")
+            for polygon in merged_polygon.geoms:
+                shape_data['exterior_coords'].append(list(polygon.exterior.coords))
+        elif isinstance(merged_polygon, Polygon):
+            print("poly")
+            # Si les pièces forment un seul polygone, ajoutez simplement ses coordonnées extérieures
+            shape_data['exterior_coords'].append(list(merged_polygon.exterior.coords))
+        else:
+            raise ValueError("Le type de forme n'est ni Polygon ni MultiPolygon")
 
         with open(path, 'w') as f:
             json.dump(shape_data, f)

@@ -34,7 +34,7 @@ class TangramGame:
             centre_x=( (width - coté) // 2)
             centre_y=( (height - coté) // 2)
             self.testShape = Polygon([(centre_x, centre_y), (centre_x+coté, centre_y), (centre_x+coté, centre_y+coté), (centre_x, centre_y+coté)])
-        elif (fond=="chameau"):
+        elif (fond=="chat"):
             pointfesse_x=251+100*sqrt(2)
             pointfesse_y=59+100*sqrt(2)+100
             self.testShape = Polygon([(251,59),(251+25*sqrt(2),59+25*sqrt(2)),(251+50*sqrt(2),59),(251+50*sqrt(2),59+50*sqrt(2)),(251+100*sqrt(2),59+100*sqrt(2)),
@@ -42,25 +42,44 @@ class TangramGame:
                                       (pointfesse_x+50*sqrt(2),pointfesse_y),(pointfesse_x,pointfesse_y),(pointfesse_x-100,pointfesse_y),
                                       (251+50*sqrt(2),59+50*sqrt(2)+100*sqrt(2)),(251+50*sqrt(2),59+50*sqrt(2)+100),
                                       (251+50*sqrt(2)-50,59+50*sqrt(2)+50),(251+25*sqrt(2),59+75*sqrt(2)),(251,59+50*sqrt(2))])
-            
-            
-        self.i = 50
+        elif (fond=="lapin"):
+            self.testShape = Polygon([(295,140),(325,140),(375,90),(425,90),(375,140),(345,140),(345,165),(445,265),(445,365),(445-50*sqrt(2),365),
+                                      (445-50*sqrt(2)-sqrt(1250),365-25*sqrt(2)),(445-50*sqrt(2),365-50*sqrt(2)),(345,265),(345,265+25*sqrt(2)),(345-25*sqrt(2),265),(345,265-25*sqrt(2)),
+                                      (345,190),(295,190)])
+        elif (fond=="ours"):
+            pointJambe_x=255-50*sqrt(2)+25*sqrt(2)
+            pointJambe_y=155+50*sqrt(2)+25*sqrt(2)
+            self.testShape = Polygon([(255,155),(405,155),(455,205),(355,205),(355,155+50*sqrt(2)),(405,205+50*sqrt(2)),(355,205+50*sqrt(2)),(305,155+50*sqrt(2)),
+                                      (355-50*sqrt(2),155+50*sqrt(2)),(255,255),(255,155+100*sqrt(2)),(pointJambe_x+50,pointJambe_y+50),
+                                      (pointJambe_x,pointJambe_y+50),(pointJambe_x,pointJambe_y),(255-50*sqrt(2),155+50*sqrt(2))])
+        else:
+            shape = ShapeGestion()
+            exterior_polygon = shape.importShapeFile("res/data.json")
+            self.testShape = exterior_polygon
+
+
+
 
     def run(self):
-        # solution = solveTangram(self.testShape, tangramPieces, self.screen)
-        # print(solution)
-        # self.displaySolution(solution)
-        # while self.running:
-        #     for event in pygame.event.get():
-        #         if event.type == pygame.QUIT:
-        #             self.running = False
-
-        #     pygame.display.update()
+        solution = solveTangram(self.testShape, tangramPieces, self.screen)
+        print(solution)
+        self.displaySolution(solution)
         while self.running:
-            self.screen.fill((255,255,255))
-            pygame.gfxdraw.filled_polygon(self.screen, self.testShape.exterior.coords,(0,0,150))
-            pygame.gfxdraw.aapolygon(self.screen, self.testShape.exterior.coords,(0,0,150))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+
             pygame.display.update()
+        # while self.running:
+        #     self.screen.fill((255,255,255))
+        #     pygame.gfxdraw.filled_polygon(self.screen, self.testShape.exterior.coords,(0,0,150))
+        #     pygame.gfxdraw.aapolygon(self.screen, self.testShape.exterior.coords,(0,0,150))
+        #     pygame.display.update()
+        #     for event in pygame.event.get():
+        #         match event.type:
+        #             case pygame.QUIT:
+        #                 self.running = False
+        #                 break
 
     def displaySolution(self,solution):
         self.screen.fill((255,255,255))

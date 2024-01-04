@@ -53,3 +53,5 @@ class TangramConstructor():
             displayManager.Update(self.screen)
             
         ShapeGestion.saveFile("res/data.json", self.pieces)
+        shape = ShapeGestion()
+        shape.saveShapeFile("res/shape.json", self.pieces)
