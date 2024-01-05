@@ -53,7 +53,7 @@ class TangramGame:
                                       (355-50*sqrt(2),155+50*sqrt(2)),(255,255),(255,155+100*sqrt(2)),(pointJambe_x+50,pointJambe_y+50),
                                       (pointJambe_x,pointJambe_y+50),(pointJambe_x,pointJambe_y),(255-50*sqrt(2),155+50*sqrt(2))])
         elif (fond=="forme 4 pieces"):
-            self.testShape=Polygon([(350,140),(450,240),(400,240),(350,290),(300,240),(250,240)])
+            self.testShape=Polygon([(360,140),(460,240),(400,240),(350,290),(300,240),(240,240),(240,190),(290,140),(290,190),(340,140),(340,240),(360,240)])
         else:
             shape = ShapeGestion()
             exterior_polygon = shape.importShapeFile("res/data.json")
