@@ -5,6 +5,8 @@ from time import sleep
 from Piece import Piece
 from math import sqrt
 
+reduction_factor = 1
+
 #   rouding security
 EPSILON = 1
 ROTATION_GAP = 45
@@ -12,16 +14,21 @@ SMALL_AREA = 10
 
 already_tested = []
 
-bigTriangle1 = Piece(Polygon([(0,0),(400,0),(0,400)]), 0, (0,255,154))
-bigTriangle2 = Piece(Polygon([(0,0),(400,0),(0,400)]), 1, (255,154,0))
-mediumTriangle = Piece(Polygon([(0,0),(round(200*sqrt(2),3),0),(0,round(200*sqrt(2),3))]), 2, (255,0,0))
-smallTriangle1 = Piece(Polygon([(0,0),(200,0),(0,200)]), 3, (189,126,0))
-smallTriangle2 = Piece(Polygon([(0,0),(200,0),(0,200)]), 4, (189,0,145))
-square = Piece(Polygon([(0,0),(200,0),(200,200),(0,200)]), 5, (247,255,0))
-trapeze = Piece(Polygon([(0,0),(200,-200),(200,0),(0,200)]), 6, (0,0,204))
-trapezeInversed = Piece(Polygon([(0,0),(200,0),(0,200),(-200,200)]), 6, (0,0,204))
+# Créez les pièces du Tangram
+bigTriangle1 = Piece(Polygon([(0, 0), (100, 0), (0, 100)]), (0, 255, 154))
+bigTriangle2 = Piece(Polygon([(0, 0), (100, 0), (0, 100)]), (255, 154, 0))
+mediumTriangle = Piece(Polygon([(0, 0), (50*sqrt(2), 0), (0, 50*sqrt(2))]), (255, 0, 0))
+smallTriangle1 = Piece(Polygon([(0, 0), (50, 0), (0, 50)]), (189, 126, 0))
+smallTriangle2 = Piece(Polygon([(0, 0), (50, 0), (0, 50)]), (189, 0, 145))
+square = Piece(Polygon([(0, 0), (50, 0), (50, 50), (0, 50)]), (247, 255, 0))
+trapeze = Piece(Polygon([(0, 0), (50, -50), (50, 0), (0, 50)]), (0, 0, 204))
+trapezeInversed = Piece(Polygon([(0, 0), (50, 50), (50, 0), (0, -50)]), (0, 0, 204))
 
 tangramPieces = [bigTriangle1,bigTriangle2,mediumTriangle,smallTriangle1,smallTriangle2,square,trapeze,trapezeInversed]
+
+# Ajustez la taille de chaque pièce
+for piece in tangramPieces:
+    piece.scale(reduction_factor)
 
 
 def solveTangram(shape,polys,screen):
@@ -69,6 +76,7 @@ def solvePolygon(shape,polys,screen):
             screen.fill((255,255,255))
             selectedPolygon.display(screen)
             ####
+
 
             difference = shape.difference(selectedPolygon.getPoly())
             #####   bug Fix ######

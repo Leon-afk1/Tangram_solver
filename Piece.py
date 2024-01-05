@@ -45,6 +45,7 @@ class Piece():
         return Polygon(self.poly)
     
     def setPoly(self, newPoly):
+    def setPoly(self, newPoly):
         self.poly = Polygon(newPoly)
     
     def getCoord(self):
@@ -54,6 +55,7 @@ class Piece():
         x, y = point
         coords = self.poly.exterior.coords[:]
         for i in range(len(coords)):
+            cx, cy = coords[i]
             cx, cy = coords[i]
             coords[i] = (cx + (x - self.coord.x), cy + (y - self.coord.y))
         self.poly = Polygon(coords)
