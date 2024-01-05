@@ -45,7 +45,6 @@ class Piece():
         return Polygon(self.poly)
     
     def setPoly(self, newPoly):
-    def setPoly(self, newPoly):
         self.poly = Polygon(newPoly)
     
     def getCoord(self):
@@ -129,7 +128,10 @@ class Piece():
         for piece in pieces:
             if buffered_poly.intersects(piece.poly):
                 return True
-            
+ 
+    def scale(self, factor):
+        self.poly = Polygon([(x * factor, y * factor) for x, y in self.poly.exterior.coords])
+
     def rotate(self, angle,pieces):
         self.rotation_angle += angle
         if self.CollisionCheck(pieces):

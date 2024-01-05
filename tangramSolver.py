@@ -15,14 +15,14 @@ SMALL_AREA = 10
 already_tested = []
 
 # Créez les pièces du Tangram
-bigTriangle1 = Piece(Polygon([(0, 0), (100, 0), (0, 100)]), (0, 255, 154))
-bigTriangle2 = Piece(Polygon([(0, 0), (100, 0), (0, 100)]), (255, 154, 0))
-mediumTriangle = Piece(Polygon([(0, 0), (50*sqrt(2), 0), (0, 50*sqrt(2))]), (255, 0, 0))
-smallTriangle1 = Piece(Polygon([(0, 0), (50, 0), (0, 50)]), (189, 126, 0))
-smallTriangle2 = Piece(Polygon([(0, 0), (50, 0), (0, 50)]), (189, 0, 145))
-square = Piece(Polygon([(0, 0), (50, 0), (50, 50), (0, 50)]), (247, 255, 0))
-trapeze = Piece(Polygon([(0, 0), (50, -50), (50, 0), (0, 50)]), (0, 0, 204))
-trapezeInversed = Piece(Polygon([(0, 0), (50, 50), (50, 0), (0, -50)]), (0, 0, 204))
+bigTriangle1 = Piece(Polygon([(0, 0), (100, 0), (0, 100)]), 0, (0, 255, 154))
+bigTriangle2 = Piece(Polygon([(0, 0), (100, 0), (0, 100)]), 1, (255, 154, 0))
+mediumTriangle = Piece(Polygon([(0, 0), (50*sqrt(2), 0), (0, 50*sqrt(2))]), 2, (255, 0, 0))
+smallTriangle1 = Piece(Polygon([(0, 0), (50, 0), (0, 50)]), 3, (189, 126, 0))
+smallTriangle2 = Piece(Polygon([(0, 0), (50, 0), (0, 50)]), 4, (189, 0, 145))
+square = Piece(Polygon([(0, 0), (50, 0), (50, 50), (0, 50)]), 5, (247, 255, 0))
+trapeze = Piece(Polygon([(0, 0), (50, -50), (50, 0), (0, 50)]), 6, (0, 0, 204))
+trapezeInversed = Piece(Polygon([(0, 0), (50, 50), (50, 0), (0, -50)]), 6, (0, 0, 204))
 
 tangramPieces = [bigTriangle1,bigTriangle2,mediumTriangle,smallTriangle1,smallTriangle2,square,trapeze,trapezeInversed]
 

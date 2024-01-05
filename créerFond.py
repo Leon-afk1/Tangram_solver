@@ -15,13 +15,13 @@ class TangramConstructor():
         reduction_factor = 1
 
         # Créez les pièces du Tangram
-        bigTriangle1 = Piece(Polygon([(0, 0), (100, 0), (0, 100)]), (0, 255, 154))
-        bigTriangle2 = Piece(Polygon([(0, 0), (100, 0), (0, 100)]), (255, 154, 0))
-        mediumTriangle = Piece(Polygon([(0, 0), (70.71, 0), (0, 70.71)]), (255, 0, 0))
-        smallTriangle1 = Piece(Polygon([(0, 0), (50, 0), (0, 50)]), (189, 126, 0))
-        smallTriangle2 = Piece(Polygon([(0, 0), (50, 0), (0, 50)]), (189, 0, 145))
-        square = Piece(Polygon([(0, 0), (50, 0), (50, 50), (0, 50)]), (247, 255, 0))
-        trapeze = Piece(Polygon([(0, 0), (50, -50), (50, 0), (0, 50)]), (0, 0, 204))
+        bigTriangle1 = Piece(Polygon([(0, 0), (100, 0), (0, 100)]),0, _color = (0, 255, 154))
+        bigTriangle2 = Piece(Polygon([(0, 0), (100, 0), (0, 100)]),1, _color = (255, 154, 0))
+        mediumTriangle = Piece(Polygon([(0, 0), (70.71, 0), (0, 70.71)]), 2, (255, 0, 0))
+        smallTriangle1 = Piece(Polygon([(0, 0), (50, 0), (0, 50)]), 3, (189, 126, 0))
+        smallTriangle2 = Piece(Polygon([(0, 0), (50, 0), (0, 50)]), 4, (189, 0, 145))
+        square = Piece(Polygon([(0, 0), (50, 0), (50, 50), (0, 50)]), 5, (247, 255, 0))
+        trapeze = Piece(Polygon([(0, 0), (50, -50), (50, 0), (0, 50)]), 6, (0, 0, 204))
 
         # Déplacer les pièces à des positions spécifiques
         bigTriangle1.moveToPoint((50, 50))
@@ -39,13 +39,14 @@ class TangramConstructor():
             piece.scale(reduction_factor)
 
 
-        self.pieces = tangramPieces
+        self.pieces = tangramPieces.copy()
 
     def run(self):
         
         self.pieces=ShapeGestion.importFile("res/data.json")
         
         eventManager = EventManager(self.pieces)
+        print(self.pieces)
         displayManager = DisplayManager(self.pieces)
 
         while eventManager.running:
