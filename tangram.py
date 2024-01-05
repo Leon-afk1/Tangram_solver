@@ -55,6 +55,7 @@ class TangramGame:
         else:
             shape = ShapeGestion()
             exterior_polygon = shape.importShapeFile("res/data.json")
+            print(exterior_polygon)
             self.testShape = exterior_polygon
 
 
@@ -63,7 +64,10 @@ class TangramGame:
     def run(self):
         solution = solveTangram(self.testShape, tangramPieces, self.screen)
         print(solution)
-        self.displaySolution(solution)
+        if solution == None:
+            print("Pas de solution")
+        else:
+            self.displaySolution(solution)
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

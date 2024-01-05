@@ -5,7 +5,7 @@ from shapely import *
 from tangramSolver import *
 import numpy as np
 from tangram import *
-from test import *
+from créerFond import *
 from Choix import *
 
 pygame.init()
