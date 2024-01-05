@@ -45,7 +45,7 @@ class ShapeGestion():
             rotation = piece_data.get('rotation', 0.0)
             color = piece_data.get('color', (255, 255, 255))  # Ajout de la couleur avec une valeur par défaut
 
-            new_piece = Piece(poly.exterior.coords[:], color, position)
+            new_piece = Piece(poly, _color = color, _coord = position)
             new_piece.rotation_angle = rotation
             pieces.append(new_piece)
 

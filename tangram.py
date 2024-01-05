@@ -62,7 +62,10 @@ class TangramGame:
 
 
     def run(self):
-        solution = solveTangram(self.testShape, tangramPieces, self.screen)
+        pieces = []
+        for piece in tangramPieces:
+            pieces.append(piece.copy())
+        solution = solveTangram(self.testShape, pieces, self.screen)
         print(solution)
         if solution == None:
             print("Pas de solution")

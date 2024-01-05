@@ -34,19 +34,18 @@ class TangramConstructor():
 
         tangramPieces = [bigTriangle1, bigTriangle2, mediumTriangle, smallTriangle1, smallTriangle2, square, trapeze]
 
-        # Ajustez la taille de chaque pièce
+        self.pieces = []
+
+        # Ajustez la taille de chaque pièce et ajout dans self.pieces
         for piece in tangramPieces:
             piece.scale(reduction_factor)
 
-
-        self.pieces = tangramPieces.copy()
 
     def run(self):
         
         self.pieces=ShapeGestion.importFile("res/data.json")
         
         eventManager = EventManager(self.pieces)
-        print(self.pieces)
         displayManager = DisplayManager(self.pieces)
 
         while eventManager.running:

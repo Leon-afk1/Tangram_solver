@@ -8,9 +8,9 @@ from math import sqrt
 reduction_factor = 1
 
 #   rouding security
-EPSILON = 1
+EPSILON = 10
 ROTATION_GAP = 45
-SMALL_AREA = 10
+SMALL_AREA = 0.1
 
 already_tested = []
 
@@ -58,10 +58,11 @@ def solvePolygon(shape,polys,screen):
     solution = []
 
     if shape.is_empty or shape.area < SMALL_AREA:
-        displayShape(shape,screen)
         return solution
     for shapePoint in shape.exterior.coords:
         polygons = polys.copy()
+        for polygon in polygons:
+            polygon.reset()
         while polygons:
             # sleep(1)
             selectedPolygonReal,polygons = selectPolygon(shape,shapePoint,polygons)
@@ -86,7 +87,7 @@ def solvePolygon(shape,polys,screen):
                         difference = geom
                         break
             
-            difference = roundShape(difference,2)
+            # difference = roundShape(difference,2)
             displayShape(difference,screen)
 
             # use the poly list because polygons list delete pieces as they don't fit
@@ -99,6 +100,15 @@ def solvePolygon(shape,polys,screen):
                 solution.extend(nextPolys)
                 
                 return solution
+        #free memory for optimisation
+        for poly in polygons:
+            del(poly)
+        del(polygons)
+    
+    for poly in polys:
+        del(poly)
+    del polys
+    
     return None
     
 
@@ -151,8 +161,6 @@ def selectPolygon(shape,point,polygons):
 
 def checkPiece(shape,point,piece):
     while not piece.allPositionUsed():
-        if(piece.id == 0):
-            print("rotation angle: "+str(piece.rotation_angle),", point : " + str(piece.origin_point))
         if polygonIn(shape,point,piece):
             return True
         piece.nextPosition(ROTATION_GAP)

@@ -5,8 +5,9 @@ import math
 from shapely.affinity import rotate
 
 class Piece():
-    def __init__(self,_polygon,_id,_color = (255,255,0), _coord=Point((0,0))):
+    def __init__(self,_polygon,_id = 0,_color = (255,255,0), _coord=Point((0,0))):
         self.color = _color
+        self.original_poly = Polygon(_polygon)
         self.poly = Polygon(_polygon)
         self.coord = Point(_coord)
         self.grabOffset = self.coord
@@ -34,12 +35,11 @@ class Piece():
         self.revolution = False
 
     def reset(self):
+        self.poly = Polygon(self.original_poly)
         self.resetRotation()
         #   reset origin point of piece
-        last_origin = self.poly.exterior.coords[self.origin_point]
         self.origin_point = 0
         self.coord = Point(self.poly.exterior.coords[0])
-        self.moveToPoint(last_origin)
 
     def getPoly(self):
         return Polygon(self.poly)
@@ -67,7 +67,7 @@ class Piece():
         if self.revolution:
             self.resetRotation()
             if not self.allPointUsed():
-                self.changeOriginPoint()
+                self.changeOriginPoint(self.origin_point+1)
         else:
             self.Rotate(angle)
 
@@ -76,13 +76,13 @@ class Piece():
         if self.rotation_angle >= 360:
             self.revolution = True 
             self.rotation_angle -= 360
-        self.poly = rotate(self.poly, self.rotation_angle, origin=self.coord)
-        self.roundPoly()
+        self.poly = rotate(self.poly, angle, origin=self.coord)
+        # self.roundPoly()
 
-    def changeOriginPoint(self):
-        if not self.allPointUsed():
+    def changeOriginPoint(self, new_origin_point):
+        if new_origin_point + 1 < len(self.poly.exterior.coords):
             last_origin = self.poly.exterior.coords[self.origin_point]
-            self.origin_point += 1
+            self.origin_point = new_origin_point
             self.coord = Point(self.poly.exterior.coords[self.origin_point])
             self.moveToPoint(last_origin)
             
