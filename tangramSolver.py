@@ -64,7 +64,6 @@ def solvePolygon(shape,polys,screen):
         for polygon in polygons:
             polygon.reset()
         while polygons:
-            # sleep(1)
             selectedPolygonReal,polygons = selectPolygon(shape,shapePoint,polygons)
 
             if(selectedPolygonReal == None):

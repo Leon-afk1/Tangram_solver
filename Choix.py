@@ -64,6 +64,13 @@ class Choix:
         self.forme_construite_width = self.forme_construite.get_width()
         self.forme_construite_height = self.forme_construite.get_height()
         
+        #Bouton forme 4 pieces
+        
+        self.forme_4_pieces=pygame.image.load('image/forme_4_pieces.png')
+        
+        self.forme_4_pieces_width = self.forme_4_pieces.get_width()
+        self.forme_4_pieces_height = self.forme_4_pieces.get_height()
+        
         #taille de la fenetre
         window_width, window_height = screen.get_size()
 
@@ -86,6 +93,9 @@ class Choix:
         self.forme_construite_x =( (window_width - self.forme_construite_width) // 2)
         self.forme_construite_y =( (window_height - self.forme_construite_height) // 2)+100
         
+        self.forme_4_pieces_x =( (window_width - self.forme_4_pieces_width) // 2)
+        self.forme_4_pieces_y =( (window_height - self.forme_4_pieces_height) // 2)+150
+        
         self.rect1 = self.carre_basique.get_rect(topleft=(self.carre_x, self.carre_y))
         self.mask_carre = pygame.mask.from_surface(self.carre_basique)
         
@@ -103,6 +113,9 @@ class Choix:
         
         self.rect6 = self.forme_construite.get_rect(topleft=(self.forme_construite_x, self.forme_construite_y))
         self.mask_forme_construite = pygame.mask.from_surface(self.forme_construite)
+        
+        self.rect7 = self.forme_4_pieces.get_rect(topleft=(self.forme_4_pieces_x, self.forme_4_pieces_y))
+        self.mask_forme_4_pieces = pygame.mask.from_surface(self.forme_4_pieces)
         
         
     def events(self):
@@ -135,6 +148,9 @@ class Choix:
         if (self.forme_construite_x <= x < self.forme_construite_x + self.forme_construite_width) and (self.forme_construite_y <= y < self.forme_construite_y + self.forme_construite_height):
             print("forme construite")
             self.runTangram("forme construite")
+        if (self.forme_4_pieces_x <= x < self.forme_4_pieces_x + self.forme_4_pieces_width) and (self.forme_4_pieces_y <= y < self.forme_4_pieces_y + self.forme_4_pieces_height):
+            print("forme 4 pieces")
+            self.runTangram("forme 4 pieces")
             
 
                 
@@ -148,6 +164,7 @@ class Choix:
         screen.blit(self.lapin,self.rect4.topleft)
         screen.blit(self.ours,self.rect5.topleft)
         screen.blit(self.forme_construite,self.rect6.topleft)
+        screen.blit(self.forme_4_pieces,self.rect7.topleft)
         pygame.display.flip()
 
     def runTangram(self,fond):
