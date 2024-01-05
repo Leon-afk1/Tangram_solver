@@ -6,35 +6,34 @@ from Piece import Piece
 
 class ShapeGestion():
     def saveShapeFile(self, path, pieces):
-        exterior_coords = [piece.poly.exterior.coords[:] for piece in pieces]
-        merged_polygon = unary_union([Polygon(coords) for coords in exterior_coords])
+        data = {'poly': []}
 
-        shape_data = {'exterior_coords': []}
-
-        if isinstance(merged_polygon, MultiPolygon):
-            # Si les pièces forment un MultiPolygon, ajoutez chaque polygone séparément
-            print("multi")
-            for polygon in merged_polygon.geoms:
-                shape_data['exterior_coords'].append(list(polygon.exterior.coords))
-        elif isinstance(merged_polygon, Polygon):
-            print("poly")
-            # Si les pièces forment un seul polygone, ajoutez simplement ses coordonnées extérieures
-            shape_data['exterior_coords'].append(list(merged_polygon.exterior.coords))
-        else:
-            raise ValueError("Le type de forme n'est ni Polygon ni MultiPolygon")
+        for piece in pieces:
+            piece_data = {
+                'polygon': piece.poly.exterior.coords[:],
+            }
+            data['poly'].append(piece_data)
 
         with open(path, 'w') as f:
-            json.dump(shape_data, f)
+            json.dump(data, f)
 
     def importShapeFile(self, path):
         with open(path, 'r') as f:
-            shape_data = json.load(f)
+            data = json.load(f)
 
-        exterior_coords = shape_data.get('exterior_coords', [])
-        exterior_polygon = Polygon(exterior_coords)
+        polygons = []
+        for piece_data in data.get('pieces', []):
+            poly = Polygon(piece_data.get('polygon', []))
+            position = piece_data.get('position', (0, 0))
+            rotation = piece_data.get('rotation', 0.0)
+            color = piece_data.get('color', (255, 255, 255))
 
-        return exterior_polygon
-    
+            new_piece = Piece(poly.exterior.coords[:], color, position)
+            new_piece.rotation_angle = rotation
+            polygons.append(new_piece.poly)
+
+        return MultiPolygon(polygons)    
+        
     def importFile(path):
         with open(path, 'r') as f:
             data = json.load(f)
