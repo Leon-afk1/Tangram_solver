@@ -92,7 +92,9 @@ def solvePolygon(shape,polys,screen):
             # use the poly list because polygons list delete pieces as they don't fit
             sub_list = createSubList(polys,selectedPolygon)
             nextPolys = None
-            nextPolys = solveTangram(difference,sub_list,screen)
+
+            if not checkTested(difference,sub_list):
+                nextPolys = solveTangram(difference,sub_list,screen)
 
             if(nextPolys != None):
                 solution.append(selectedPolygon)
@@ -103,7 +105,7 @@ def solvePolygon(shape,polys,screen):
         for poly in polygons:
             del(poly)
         del(polygons)
-    
+    saveTested(shape,polys.copy())
     for poly in polys:
         del(poly)
     del polys
