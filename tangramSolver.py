@@ -1,6 +1,5 @@
-from functions import *
+from shapely import *
 import pygame
-from pygame import gfxdraw
 from time import sleep
 from Piece import Piece
 from math import sqrt

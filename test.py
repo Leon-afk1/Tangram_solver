@@ -1,5 +1,5 @@
-from functions import *
 import pygame
+from shapely import *
 from Piece import Piece
 from EventManager import EventManager
 from DisplayManager import DisplayManager

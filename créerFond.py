@@ -1,4 +1,4 @@
-from functions import *
+from shapely import *
 import pygame
 from Piece import Piece
 from EventManager import EventManager
