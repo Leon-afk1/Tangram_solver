@@ -35,7 +35,7 @@ class EventManager():
             otherPieces = self.pieces.copy()
             otherPieces.remove(self.pieceHeld)
             if self.pieceHeld:
-                self.pieceHeld.rotate(angle,otherPieces)
+                self.pieceHeld.rotate_input(angle,otherPieces)
 
     def OnMouseDown(self):
         mousePos = pygame.mouse.get_pos()

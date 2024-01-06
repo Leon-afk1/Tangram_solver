@@ -122,17 +122,24 @@ class Piece():
             self.setOffset(mousePos)
 
     def CollisionCheck(self, pieces):
-        rotated_poly = rotate(self.poly, self.rotation_angle, origin=self.coord)
-        buffered_poly = rotated_poly.buffer(1e-2)  # Ajustez la valeur du tampon selon vos besoins
+        
+        # buffered_poly = rotated_poly.buffer(1e-2)  # Ajustez la valeur du tampon selon vos besoins
 
         for piece in pieces:
-            if buffered_poly.intersects(piece.poly):
+            if self.poly.intersects(piece.poly):
                 return True
+        return False
  
     def scale(self, factor):
         self.poly = Polygon([(x * factor, y * factor) for x, y in self.poly.exterior.coords])
 
-    def rotate(self, angle,pieces):
-        self.rotation_angle += angle
+    def rotate_input(self, angle,pieces):
+        print("rotatee")
+        previous_poly = Polygon(self.poly)
+        self.poly = rotate(self.poly, angle, origin=self.coord)
         if self.CollisionCheck(pieces):
-            self.rotation_angle -= angle
+            self.poly = previous_poly
+        else:
+            self.rotation_angle += angle
+            
+        
