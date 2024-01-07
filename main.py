@@ -15,5 +15,6 @@ running = True
 screen_taille = (720, 480)
 
 screen = pygame.display.set_mode(screen_taille)
+#lancement du launcher
 Launcher = launcher(screen)
 Launcher.run()

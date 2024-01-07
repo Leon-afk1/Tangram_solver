@@ -29,16 +29,17 @@ tangramPieces = [bigTriangle1,bigTriangle2,mediumTriangle,smallTriangle1,smallTr
 for piece in tangramPieces:
     piece.scale(reduction_factor)
 
-
+#Résolution du tangram
 def solveTangram(shape,polys,screen):
     solution = []
+    #On vérifie si la forme est un multipolygone ou un polygone et on résout en fonction
     if shape.geom_type == "MultiPolygon":
         solution = solveMultipolygon(shape,polys,screen)
     else:
         solution = solvePolygon(shape,polys,screen)
     return solution
 
-
+#Résolution du multipolygone
 def solveMultipolygon(multi_shapes,polys,screen):
     solution = []
     shapes = list(multi_shapes.geoms)
@@ -52,7 +53,7 @@ def solveMultipolygon(multi_shapes,polys,screen):
             polys = removePiece(polys,sol)
     return solution
     
-
+#Résolution du polygone
 def solvePolygon(shape,polys,screen):
     solution = []
 
@@ -111,7 +112,7 @@ def solvePolygon(shape,polys,screen):
     
     return None
     
-
+#Enleve une pièce de la liste
 def removePiece(list,piece):
     ret = []
     for p in list:
@@ -119,17 +120,20 @@ def removePiece(list,piece):
             ret.append(p)
     return ret
 
+#Affiche la forme
 def displayShape(shape,screen):
     if not shape.is_empty and shape.geom_type != "MultiPolygon":
         pygame.gfxdraw.filled_polygon(screen, shape.exterior.coords,(0,0,150))
         pygame.gfxdraw.aapolygon(screen, shape.exterior.coords,(0,0,150))
         pygame.display.update()
 
+#Renvoi le polygone réel correspondant au polygone sélectionné
 def getRealPoly(selected,polys):
     for poly in polys:
         if selected.id == poly.id:
             return poly
 
+#Crée une sous liste sans la pièce sélectionnée
 def createSubList(polygons,selectedPolygon):
     # print("create sub_list without n°" + str(selectedPolygon.id))
     sub_list = []
@@ -140,8 +144,7 @@ def createSubList(polygons,selectedPolygon):
             sub_list.append(resetedPoly)
     return sub_list
 
-    
-#   checks if a polygon is going into that place by rotating it and moving it towards the point
+#Renvoi le polygone sélectionné et la liste des polygones restants
 def selectPolygon(shape,point,polygons):
     selectedPolygon = None
     new_polygon_list = []
@@ -157,8 +160,7 @@ def selectPolygon(shape,point,polygons):
 
     return (selectedPolygon,new_polygon_list)
     
-        
-
+#Verifie si une pièce est dans la forme
 def checkPiece(shape,point,piece):
     while not piece.allPositionUsed():
         if polygonIn(shape,point,piece):
@@ -166,7 +168,7 @@ def checkPiece(shape,point,piece):
         piece.nextPosition(ROTATION_GAP)
     return False
 
-#checks if a polygon is in the shape by moving it on the point
+#Verifie si un polygone est dans la forme
 def polygonIn(shape,point,piece):
     piece.moveToPoint(point)
     return fullyIn(piece.getPoly(),shape)
@@ -189,7 +191,7 @@ def fullyIn(polygon,shape):
     else:
         return False
 
-
+#Crée une forme valide
 def roundShape(shape,digit):
     if shape.geom_type == "MultiPolygon":
         shapes = list(shape.geoms)
@@ -199,6 +201,7 @@ def roundShape(shape,digit):
         shape = roundPoly(shape,digit)
     return shape
     
+#Crée un polygone valide
 def roundPoly(poly,digit):
     if poly.area < SMALL_AREA:
         return Polygon()
@@ -210,6 +213,7 @@ def roundPoly(poly,digit):
     make_valid(poly)
     return poly
 
+#Verifie si une forme est valide
 def checkTested(shape,polygons):
     ids = []
     for poly in polygons:
@@ -226,6 +230,7 @@ def checkTested(shape,polygons):
             return True
     return False
 
+#Sauvegarde une forme testée
 def saveTested(shape,polygons):
     ids = []
     for poly in polygons:

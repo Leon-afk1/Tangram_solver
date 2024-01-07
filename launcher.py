@@ -50,10 +50,11 @@ class launcher:
         self.creer_x =( (window_width - self.creer_width) // 2)
         self.creer_y =( (window_height - self.creer_height) // 2)+100
 
+        #position du bouton creer un tangram centré
         self.rect2 = self.creer.get_rect(topleft=(self.creer_x, self.creer_y))
         self.mask_creer = pygame.mask.from_surface(self.creer)
 
-
+    #fonction qui gere les evenements
     def events(self):
         for event in pygame.event.get():
             match event.type:
@@ -63,7 +64,7 @@ class launcher:
                 case pygame.MOUSEBUTTONDOWN:
                     self.OnMouseDown()
             
-            
+    #fonction qui gere les evenements de la souris
     def OnMouseDown(self):
         (x,y) = pygame.mouse.get_pos()
         if (self.resoudre_x <= x < self.resoudre_x + self.resoudre_width) and (self.resoudre_y <= y < self.resoudre_y + self.resoudre_height):
@@ -73,7 +74,7 @@ class launcher:
             gameConstructor = TangramConstructor(720, 480)
             gameConstructor.run()
 
-                
+    #fonction qui affiche les elements
     def display(self, screen):
         
         screen.blit(self.fond, self.rect.topleft)
@@ -82,11 +83,13 @@ class launcher:
         screen.blit(self.creer,self.rect2.topleft)
         pygame.display.flip()
 
+    #fonction qui lance le jeu
     def runTangram(self):
         screen = self.screen
         tan = TangramGame(720,480)
         tan.run()
 
+    #fonction qui lance le launcher
     def run(self):
         while self.running:
             self.events()

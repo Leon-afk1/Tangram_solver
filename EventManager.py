@@ -7,6 +7,7 @@ class EventManager():
         self.running = True
         self.pieceHeld = None
 
+    # Fonction qui gère les évènements
     def Event(self):
         for event in pygame.event.get():
             match event.type:
@@ -30,13 +31,16 @@ class EventManager():
         elif key == pygame.K_RIGHT:
             self.RotatePiece(5.0)   # Rotation vers la droite (angle positif)
 
+    # Fonction qui gère les évènements de la souris
     def RotatePiece(self, angle):
+        # Si une pièce est tenue
         if self.pieceHeld != None:
             otherPieces = self.pieces.copy()
             otherPieces.remove(self.pieceHeld)
             if self.pieceHeld:
                 self.pieceHeld.rotate_input(angle,otherPieces)
 
+    # Fonction qui gère les évènements de la souris
     def OnMouseDown(self):
         mousePos = pygame.mouse.get_pos()
         mousePosPoint = Point(mousePos)
