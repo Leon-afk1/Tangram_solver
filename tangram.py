@@ -72,6 +72,10 @@ class TangramGame:
         #On crée les pieces du tangram
         for piece in tangramPieces:
             pieces.append(piece.copy())
+
+        # Affichage de la forme a résoudre
+        displayShape(self.testShape,self.screen)
+        sleep(1)
         #On lance la résolution du tangram
         solution = solveTangram(self.testShape, pieces, self.screen)
         #On affiche la solution
